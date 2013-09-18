@@ -29,12 +29,15 @@ namespace Chroma
   //! Empty constructor
   CPPWilsonDslashF::CPPWilsonDslashF()
   {
+    // Just to make this testable
+    packed_gauge = (PrimitiveSU3MatrixF *)0x0;
     init();
   }
   
   //! Full constructor
   CPPWilsonDslashF::CPPWilsonDslashF(Handle< FermState<T,P,Q> > state)
   { 
+    packed_gauge = (PrimitiveSU3MatrixF *)0x0;
     init();
     create(state);
   }
@@ -43,6 +46,7 @@ namespace Chroma
   CPPWilsonDslashF::CPPWilsonDslashF(Handle< FermState<T,P,Q> > state,
 				   const AnisoParam_t& aniso_) 
   {
+    packed_gauge = (PrimitiveSU3MatrixF *)0x0;
     init();
     create(state, aniso_);
   }
@@ -51,6 +55,7 @@ namespace Chroma
   CPPWilsonDslashF::CPPWilsonDslashF(Handle< FermState<T,P,Q> > state,
 				   const multi1d<Real>& coeffs_)
   {
+    packed_gauge = (PrimitiveSU3MatrixF *)0x0;
     init();
     create(state, coeffs_);
   }
@@ -103,7 +108,10 @@ namespace Chroma
     }
 
     // Pack the gauge fields
-    packed_gauge.resize( Nd * Layout::sitesOnNode() );
+    //packed_gauge.resize( Nd * Layout::sitesOnNode() );
+    size_t alloc_bytes=4*Layout::sitesOnNode()*sizeof(PrimitiveSU3MatrixF);
+    packed_gauge = (PrimitiveSU3MatrixF *)valloc(alloc_bytes);
+
 
 #if 0
     QDPIO::cout << "Done " << endl << flush;
@@ -126,7 +134,7 @@ namespace Chroma
     START_CODE();
 
     // Handle will free the operator.
-
+    if( packed_gauge) free(packed_gauge);
     END_CODE();
   }
 

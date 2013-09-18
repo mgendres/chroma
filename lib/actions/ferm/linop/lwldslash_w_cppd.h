@@ -12,7 +12,8 @@
 #include "state.h"
 #include "cpp_dslash.h"
 #include "cpp_dslash_qdp_packer.h" 
-
+#include <cstdlib>
+using namespace std;
 
 using namespace CPlusPlusWilsonDslash;
 
@@ -113,7 +114,7 @@ namespace Chroma
 
   private:
     multi1d<Real> coeffs;  /*!< Nd array of coefficients of terms in the action */
-    multi1d<PrimitiveSU3MatrixD> packed_gauge;  // fold in anisotropy
+    PrimitiveSU3MatrixD* packed_gauge;  // fold in anisotropy
     Handle< FermBC<T,P,Q> > fbc;
     Handle< Dslash<double> > D; 
   };
