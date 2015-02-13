@@ -21,6 +21,7 @@
 #include <cassert>
 
 using namespace QDP;
+using namespace std ;
 
 namespace Chroma {
 

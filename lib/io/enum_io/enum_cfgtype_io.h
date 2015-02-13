@@ -36,6 +36,7 @@ namespace Chroma {
       CFG_TYPE_WEAK_FIELD,
       CFG_TYPE_CLASSICAL_SF,
       CFG_TYPE_WUPP,
+      CFG_TYPE_MILC_DOUBLE
   };
 
 

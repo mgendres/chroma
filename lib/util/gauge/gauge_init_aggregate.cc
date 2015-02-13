@@ -6,6 +6,7 @@
 #include "util/gauge/gauge_init_aggregate.h"
 
 #include "util/gauge/milc_gauge_init.h"
+#include "util/gauge/milc_gauge_init_d.h"
 #include "util/gauge/nersc_gauge_init.h"
 #include "util/gauge/szin_gauge_init.h"
 #include "util/gauge/szinqio_gauge_init.h"
@@ -34,6 +35,7 @@ namespace Chroma
       {
 	// gauge initialization
 	success &= MILCGaugeInitEnv::registerAll();
+	success &= MILCGaugeInitDEnv::registerAll();
 	success &= NERSCGaugeInitEnv::registerAll();
 	success &= SZINGaugeInitEnv::registerAll();
 	success &= SZINQIOGaugeInitEnv::registerAll();

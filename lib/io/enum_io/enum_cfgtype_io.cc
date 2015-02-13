@@ -31,6 +31,7 @@ namespace Chroma {
       success &= theCfgTypeMap::Instance().registerPair( string("WEAK_FIELD"), CFG_TYPE_WEAK_FIELD);
       success &= theCfgTypeMap::Instance().registerPair( string("CLASSICAL_SF"), CFG_TYPE_CLASSICAL_SF);
       
+      success = theCfgTypeMap::Instance().registerPair(string("MILC_DOUBLE"), CFG_TYPE_MILC_DOUBLE );
       return success;
     }
 

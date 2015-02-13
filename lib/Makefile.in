@@ -464,9 +464,9 @@ am__libchroma_a_SOURCES_DIST = actions/boson/operator/klein_gord.cc \
 	io/aniso_io.cc io/cfgtype_io.cc io/gauge_io.cc \
 	io/kyugauge_io.cc io/kyuqprop_io.cc io/milc_io.cc \
 	io/overlap_state_info.cc io/readcppacs.cc io/cppacs_io.cc \
-	io/param_io.cc io/qprop_io.cc io/readmilc.cc io/readszin.cc \
-	io/szin_io.cc io/writemilc.cc io/writeszin.cc io/readwupp.cc \
-	io/xml_group_reader.cc meas/eig/eig_spec.cc \
+	io/param_io.cc io/qprop_io.cc io/readmilc.cc io/readmilc_d.cc \
+	io/readszin.cc io/szin_io.cc io/writemilc.cc io/writeszin.cc \
+	io/readwupp.cc io/xml_group_reader.cc meas/eig/eig_spec.cc \
 	meas/eig/eig_spec_array.cc meas/eig/gramschm.cc \
 	meas/eig/gramschm_array.cc meas/eig/ritz.cc \
 	meas/eig/ritz_array.cc meas/eig/sn_jacob.cc \
@@ -540,9 +540,9 @@ am__libchroma_a_SOURCES_DIST = actions/boson/operator/klein_gord.cc \
 	util/gauge/eeu1.cc util/gauge/expm12.cc util/gauge/expmat.cc \
 	util/gauge/expsu3.cc util/gauge/gauge_startup.cc \
 	util/gauge/eesu2.cc util/gauge/gauge_init_aggregate.cc \
-	util/gauge/milc_gauge_init.cc util/gauge/nersc_gauge_init.cc \
-	util/gauge/szin_gauge_init.cc util/gauge/szinqio_gauge_init.cc \
-	util/gauge/kyu_gauge_init.cc \
+	util/gauge/milc_gauge_init.cc util/gauge/milc_gauge_init_d.cc \
+	util/gauge/nersc_gauge_init.cc util/gauge/szin_gauge_init.cc \
+	util/gauge/szinqio_gauge_init.cc util/gauge/kyu_gauge_init.cc \
 	util/gauge/disordered_gauge_init.cc \
 	util/gauge/wupp_gauge_init.cc util/gauge/unit_gauge_init.cc \
 	util/gauge/cppacs_gauge_init.cc util/gauge/weak_gauge_init.cc \
@@ -1229,15 +1229,15 @@ am_libchroma_a_OBJECTS = actions/boson/operator/klein_gord.$(OBJEXT) \
 	io/milc_io.$(OBJEXT) io/overlap_state_info.$(OBJEXT) \
 	io/readcppacs.$(OBJEXT) io/cppacs_io.$(OBJEXT) \
 	io/param_io.$(OBJEXT) io/qprop_io.$(OBJEXT) \
-	io/readmilc.$(OBJEXT) io/readszin.$(OBJEXT) \
-	io/szin_io.$(OBJEXT) io/writemilc.$(OBJEXT) \
-	io/writeszin.$(OBJEXT) io/readwupp.$(OBJEXT) \
-	io/xml_group_reader.$(OBJEXT) meas/eig/eig_spec.$(OBJEXT) \
-	meas/eig/eig_spec_array.$(OBJEXT) meas/eig/gramschm.$(OBJEXT) \
-	meas/eig/gramschm_array.$(OBJEXT) meas/eig/ritz.$(OBJEXT) \
-	meas/eig/ritz_array.$(OBJEXT) meas/eig/sn_jacob.$(OBJEXT) \
-	meas/eig/sn_jacob_array.$(OBJEXT) meas/gfix/axgauge.$(OBJEXT) \
-	meas/gfix/temporal_gauge.$(OBJEXT) \
+	io/readmilc.$(OBJEXT) io/readmilc_d.$(OBJEXT) \
+	io/readszin.$(OBJEXT) io/szin_io.$(OBJEXT) \
+	io/writemilc.$(OBJEXT) io/writeszin.$(OBJEXT) \
+	io/readwupp.$(OBJEXT) io/xml_group_reader.$(OBJEXT) \
+	meas/eig/eig_spec.$(OBJEXT) meas/eig/eig_spec_array.$(OBJEXT) \
+	meas/eig/gramschm.$(OBJEXT) meas/eig/gramschm_array.$(OBJEXT) \
+	meas/eig/ritz.$(OBJEXT) meas/eig/ritz_array.$(OBJEXT) \
+	meas/eig/sn_jacob.$(OBJEXT) meas/eig/sn_jacob_array.$(OBJEXT) \
+	meas/gfix/axgauge.$(OBJEXT) meas/gfix/temporal_gauge.$(OBJEXT) \
 	meas/gfix/coulgauge.$(OBJEXT) meas/gfix/grelax.$(OBJEXT) \
 	meas/gfix/polar_dec.$(OBJEXT) meas/gfix/rot_colvec.$(OBJEXT) \
 	meas/glue/fuzwilp.$(OBJEXT) meas/glue/mesfield.$(OBJEXT) \
@@ -1322,6 +1322,7 @@ am_libchroma_a_OBJECTS = actions/boson/operator/klein_gord.$(OBJEXT) \
 	util/gauge/gauge_startup.$(OBJEXT) util/gauge/eesu2.$(OBJEXT) \
 	util/gauge/gauge_init_aggregate.$(OBJEXT) \
 	util/gauge/milc_gauge_init.$(OBJEXT) \
+	util/gauge/milc_gauge_init_d.$(OBJEXT) \
 	util/gauge/nersc_gauge_init.$(OBJEXT) \
 	util/gauge/szin_gauge_init.$(OBJEXT) \
 	util/gauge/szinqio_gauge_init.$(OBJEXT) \
@@ -2014,8 +2015,8 @@ am__nobase_include_HEADERS_DIST = chroma_config.h chroma.h \
 	io/enum_io/enum_stochsrc_io.h io/aniso_io.h io/cfgtype_io.h \
 	io/eigen_io.h io/gauge_io.h io/kyugauge_io.h io/readwupp.h \
 	io/milc_io.h io/param_io.h io/qprop_io.h io/readmilc.h \
-	io/readcppacs.h io/cppacs_io.h io/readszin.h io/szin_io.h \
-	io/writemilc.h io/writeszin.h io/monomial_io.h \
+	io/readmilc_d.h io/readcppacs.h io/cppacs_io.h io/readszin.h \
+	io/szin_io.h io/writemilc.h io/writeszin.h io/monomial_io.h \
 	io/xml_group_reader.h meas/eig/eig.h meas/eig/gramschm.h \
 	meas/eig/gramschm_array.h meas/eig/ritz.h \
 	meas/eig/ritz_array.h meas/eig/sn_jacob.h \
@@ -2108,9 +2109,10 @@ am__nobase_include_HEADERS_DIST = chroma_config.h chroma.h \
 	util/gauge/gauge_startup.h util/gauge/gauge_init.h \
 	util/gauge/gauge_init_factory.h \
 	util/gauge/gauge_init_aggregate.h util/gauge/wupp_gauge_init.h \
-	util/gauge/milc_gauge_init.h util/gauge/nersc_gauge_init.h \
-	util/gauge/szin_gauge_init.h util/gauge/szinqio_gauge_init.h \
-	util/gauge/kyu_gauge_init.h util/gauge/disordered_gauge_init.h \
+	util/gauge/milc_gauge_init.h util/gauge/milc_gauge_init_d.h \
+	util/gauge/nersc_gauge_init.h util/gauge/szin_gauge_init.h \
+	util/gauge/szinqio_gauge_init.h util/gauge/kyu_gauge_init.h \
+	util/gauge/disordered_gauge_init.h \
 	util/gauge/unit_gauge_init.h util/gauge/cppacs_gauge_init.h \
 	util/gauge/weak_gauge_init.h util/gauge/sf_gauge_init.h \
 	util/gauge/hotst.h util/gauge/reunit.h util/gauge/rgauge.h \
@@ -3058,8 +3060,8 @@ nobase_include_HEADERS = chroma_config.h chroma.h chromabase.h \
 	io/enum_io/enum_stochsrc_io.h io/aniso_io.h io/cfgtype_io.h \
 	io/eigen_io.h io/gauge_io.h io/kyugauge_io.h io/readwupp.h \
 	io/milc_io.h io/param_io.h io/qprop_io.h io/readmilc.h \
-	io/readcppacs.h io/cppacs_io.h io/readszin.h io/szin_io.h \
-	io/writemilc.h io/writeszin.h io/monomial_io.h \
+	io/readmilc_d.h io/readcppacs.h io/cppacs_io.h io/readszin.h \
+	io/szin_io.h io/writemilc.h io/writeszin.h io/monomial_io.h \
 	io/xml_group_reader.h meas/eig/eig.h meas/eig/gramschm.h \
 	meas/eig/gramschm_array.h meas/eig/ritz.h \
 	meas/eig/ritz_array.h meas/eig/sn_jacob.h \
@@ -3152,9 +3154,10 @@ nobase_include_HEADERS = chroma_config.h chroma.h chromabase.h \
 	util/gauge/gauge_startup.h util/gauge/gauge_init.h \
 	util/gauge/gauge_init_factory.h \
 	util/gauge/gauge_init_aggregate.h util/gauge/wupp_gauge_init.h \
-	util/gauge/milc_gauge_init.h util/gauge/nersc_gauge_init.h \
-	util/gauge/szin_gauge_init.h util/gauge/szinqio_gauge_init.h \
-	util/gauge/kyu_gauge_init.h util/gauge/disordered_gauge_init.h \
+	util/gauge/milc_gauge_init.h util/gauge/milc_gauge_init_d.h \
+	util/gauge/nersc_gauge_init.h util/gauge/szin_gauge_init.h \
+	util/gauge/szinqio_gauge_init.h util/gauge/kyu_gauge_init.h \
+	util/gauge/disordered_gauge_init.h \
 	util/gauge/unit_gauge_init.h util/gauge/cppacs_gauge_init.h \
 	util/gauge/weak_gauge_init.h util/gauge/sf_gauge_init.h \
 	util/gauge/hotst.h util/gauge/reunit.h util/gauge/rgauge.h \
@@ -3887,9 +3890,9 @@ libchroma_a_SOURCES = actions/boson/operator/klein_gord.cc \
 	io/aniso_io.cc io/cfgtype_io.cc io/gauge_io.cc \
 	io/kyugauge_io.cc io/kyuqprop_io.cc io/milc_io.cc \
 	io/overlap_state_info.cc io/readcppacs.cc io/cppacs_io.cc \
-	io/param_io.cc io/qprop_io.cc io/readmilc.cc io/readszin.cc \
-	io/szin_io.cc io/writemilc.cc io/writeszin.cc io/readwupp.cc \
-	io/xml_group_reader.cc meas/eig/eig_spec.cc \
+	io/param_io.cc io/qprop_io.cc io/readmilc.cc io/readmilc_d.cc \
+	io/readszin.cc io/szin_io.cc io/writemilc.cc io/writeszin.cc \
+	io/readwupp.cc io/xml_group_reader.cc meas/eig/eig_spec.cc \
 	meas/eig/eig_spec_array.cc meas/eig/gramschm.cc \
 	meas/eig/gramschm_array.cc meas/eig/ritz.cc \
 	meas/eig/ritz_array.cc meas/eig/sn_jacob.cc \
@@ -3963,9 +3966,9 @@ libchroma_a_SOURCES = actions/boson/operator/klein_gord.cc \
 	util/gauge/eeu1.cc util/gauge/expm12.cc util/gauge/expmat.cc \
 	util/gauge/expsu3.cc util/gauge/gauge_startup.cc \
 	util/gauge/eesu2.cc util/gauge/gauge_init_aggregate.cc \
-	util/gauge/milc_gauge_init.cc util/gauge/nersc_gauge_init.cc \
-	util/gauge/szin_gauge_init.cc util/gauge/szinqio_gauge_init.cc \
-	util/gauge/kyu_gauge_init.cc \
+	util/gauge/milc_gauge_init.cc util/gauge/milc_gauge_init_d.cc \
+	util/gauge/nersc_gauge_init.cc util/gauge/szin_gauge_init.cc \
+	util/gauge/szinqio_gauge_init.cc util/gauge/kyu_gauge_init.cc \
 	util/gauge/disordered_gauge_init.cc \
 	util/gauge/wupp_gauge_init.cc util/gauge/unit_gauge_init.cc \
 	util/gauge/cppacs_gauge_init.cc util/gauge/weak_gauge_init.cc \
@@ -5039,6 +5042,8 @@ io/cppacs_io.$(OBJEXT): io/$(am__dirstamp) \
 io/param_io.$(OBJEXT): io/$(am__dirstamp) io/$(DEPDIR)/$(am__dirstamp)
 io/qprop_io.$(OBJEXT): io/$(am__dirstamp) io/$(DEPDIR)/$(am__dirstamp)
 io/readmilc.$(OBJEXT): io/$(am__dirstamp) io/$(DEPDIR)/$(am__dirstamp)
+io/readmilc_d.$(OBJEXT): io/$(am__dirstamp) \
+	io/$(DEPDIR)/$(am__dirstamp)
 io/readszin.$(OBJEXT): io/$(am__dirstamp) io/$(DEPDIR)/$(am__dirstamp)
 io/szin_io.$(OBJEXT): io/$(am__dirstamp) io/$(DEPDIR)/$(am__dirstamp)
 io/writemilc.$(OBJEXT): io/$(am__dirstamp) \
@@ -5362,6 +5367,8 @@ util/gauge/eesu2.$(OBJEXT): util/gauge/$(am__dirstamp) \
 util/gauge/gauge_init_aggregate.$(OBJEXT): util/gauge/$(am__dirstamp) \
 	util/gauge/$(DEPDIR)/$(am__dirstamp)
 util/gauge/milc_gauge_init.$(OBJEXT): util/gauge/$(am__dirstamp) \
+	util/gauge/$(DEPDIR)/$(am__dirstamp)
+util/gauge/milc_gauge_init_d.$(OBJEXT): util/gauge/$(am__dirstamp) \
 	util/gauge/$(DEPDIR)/$(am__dirstamp)
 util/gauge/nersc_gauge_init.$(OBJEXT): util/gauge/$(am__dirstamp) \
 	util/gauge/$(DEPDIR)/$(am__dirstamp)
@@ -7375,6 +7382,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@io/$(DEPDIR)/qprop_io.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@io/$(DEPDIR)/readcppacs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@io/$(DEPDIR)/readmilc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@io/$(DEPDIR)/readmilc_d.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@io/$(DEPDIR)/readszin.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@io/$(DEPDIR)/readszinferm_w.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@io/$(DEPDIR)/readszinqprop_w.Po@am__quote@
@@ -7816,6 +7824,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@util/gauge/$(DEPDIR)/key_timeslice_gauge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@util/gauge/$(DEPDIR)/kyu_gauge_init.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@util/gauge/$(DEPDIR)/milc_gauge_init.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@util/gauge/$(DEPDIR)/milc_gauge_init_d.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@util/gauge/$(DEPDIR)/nersc_gauge_init.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@util/gauge/$(DEPDIR)/reunit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@util/gauge/$(DEPDIR)/rgauge.Po@am__quote@

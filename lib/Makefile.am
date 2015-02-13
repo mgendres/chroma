@@ -213,7 +213,7 @@ nobase_include_HEADERS = \
         io/enum_io/enum_stochsrc_io.h\
         io/aniso_io.h io/cfgtype_io.h io/eigen_io.h \
 	io/gauge_io.h io/kyugauge_io.h io/readwupp.h \
-        io/milc_io.h io/param_io.h io/qprop_io.h io/readmilc.h \
+        io/milc_io.h io/param_io.h io/qprop_io.h io/readmilc.h io/readmilc_d.h\
         io/readcppacs.h io/cppacs_io.h \
 	io/readszin.h io/szin_io.h \
         io/writemilc.h io/writeszin.h \
@@ -341,6 +341,7 @@ nobase_include_HEADERS = \
 	util/gauge/gauge_init_aggregate.h \
         util/gauge/wupp_gauge_init.h \
 	util/gauge/milc_gauge_init.h \
+	util/gauge/milc_gauge_init_d.h \
 	util/gauge/nersc_gauge_init.h \
 	util/gauge/szin_gauge_init.h \
 	util/gauge/szinqio_gauge_init.h \
@@ -1177,7 +1178,7 @@ libchroma_a_SOURCES = \
 	io/gauge_io.cc io/kyugauge_io.cc io/kyuqprop_io.cc \
 	io/milc_io.cc io/overlap_state_info.cc \
         io/readcppacs.cc io/cppacs_io.cc\
-	io/param_io.cc io/qprop_io.cc io/readmilc.cc \
+	io/param_io.cc io/qprop_io.cc io/readmilc.cc io/readmilc_d.cc\
 	io/readszin.cc io/szin_io.cc \
 	io/writemilc.cc io/writeszin.cc \
         io/readwupp.cc \
@@ -1272,6 +1273,7 @@ libchroma_a_SOURCES = \
 	util/gauge/gauge_startup.cc util/gauge/eesu2.cc \
 	util/gauge/gauge_init_aggregate.cc \
 	util/gauge/milc_gauge_init.cc \
+	util/gauge/milc_gauge_init_d.cc \
 	util/gauge/nersc_gauge_init.cc \
 	util/gauge/szin_gauge_init.cc \
 	util/gauge/szinqio_gauge_init.cc \

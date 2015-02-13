@@ -5,6 +5,7 @@
 
 #include "actions/ferm/fermstates/stout_fermstate_params.h"
 
+using namespace std ;
 
 namespace Chroma 
 {

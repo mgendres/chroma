@@ -83,7 +83,8 @@ int main(int argc, char **argv)
 	      << " (19) UKQCD gauge configuration FE\n"
 	      << " (20) Single-precision UKQCD gauge configuration FE\n"
 	      << " (21) SZIN config in QIO format\n"
-	      << " (22) Uniform back ground field\n";
+	      << " (22) Uniform back ground field\n"
+	      << " (23) SCIDAC gauge field\n";
   
   QDPIO::cin >> input_type;
   
@@ -515,6 +516,12 @@ int main(int argc, char **argv)
     QDPIO::cout << "Creating constant diagonal gauge\n";
     constgauge(u, theta);
     break;
+
+  case 23:
+    readGauge(gauge_file_xml_in, gauge_record_xml_in, u,  
+	      cfg_input_file, QDPIO_SERIAL) ;
+
+    break ;
 
   default:
     QDP_error_exit("unknown input type", input_type);
