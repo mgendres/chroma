@@ -7,6 +7,7 @@
 #include "inline_interpolate.h"
 #include "meas/inline/abs_inline_measurement_factory.h"
 #include "meas/glue/mesplq.h"
+#include "meas/glue/interpolate.h"
 #include "util/info/proginfo.h"
 #include "meas/inline/make_xml_file.h"
 #include "meas/inline/io/named_objmap.h"
@@ -235,6 +236,11 @@ namespace Chroma
       MesPlq(xml_out, "GaugeObservables", u);
       
 ///////// INTERPOLATION CODE GOES HERE !!!      
+      multi1d<int> size(Nd);
+      size = Layout::lattSize();
+      DebugWrite("debug_gauge.dat", u, size);
+
+
       
       multi1d<LatticeColorMatrix> interp_u = u ; 
 //      Real eps  = params.param.wtime/params.param.nstep ;
