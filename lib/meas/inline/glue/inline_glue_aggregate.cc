@@ -15,6 +15,7 @@
 #include "meas/inline/glue/inline_glue_diag_matelem_colorvec.h"
 #include "meas/inline/glue/inline_glueball_ops.h"
 #include "meas/inline/glue/inline_wilson_flow.h"
+#include "meas/inline/glue/inline_interpolate.h"
 
 namespace Chroma
 {
@@ -47,6 +48,7 @@ namespace Chroma
 	success &= InlineGlueDiagMatElemColorVecEnv::registerAll();
 	success &= InlineGlueballOpsEnv::registerAll();
 	success &= InlineWilsonFlowEnv::registerAll();
+	success &= InlineInterpolateEnv::registerAll();
 
 	registered = true;
       }
