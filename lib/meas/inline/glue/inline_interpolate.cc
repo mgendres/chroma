@@ -244,42 +244,35 @@ namespace Chroma
       Double plaq, r;
 
       QDPIO::cout << "Cooling plaquette bulk..." << endl;
-      MesPlq(u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+      MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
       do {
         plaq = w_plaq;
         // face cooling function goes here
         wilson_flow(xml_out, interp_u, 1, 0.1 , -1); // replace this!
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         r = w_plaq / plaq - 1.0;
-        QDPIO::cout << "Relative plaq difference between sweeps : " <<  r << endl;
+        QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
       } while ( toBool(r>tol) );
 
       QDPIO::cout << "Cooling cube bulk..." << endl;
-      MesPlq(u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+      MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
       do {
         plaq = w_plaq;
         // cube cooling function goes here
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         r = w_plaq / plaq - 1.0;
-        QDPIO::cout << "Relative plaq difference between sweeps : " <<  r << endl;
+        QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
       } while ( toBool(r>tol) );
 
       QDPIO::cout << "Cooling hypercube bulk..." << endl;
-      MesPlq(u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+      MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
       do {
         plaq = w_plaq;
         // hypercube cooling function goes here
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         r = w_plaq / plaq - 1.0;
-        QDPIO::cout << "Relative plaq difference between sweeps : " <<  r << endl;
+        QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
       } while ( toBool(r>tol) );
-
-
-
-
-
-
-///////// INTERPOLATION CODE GOES HERE !!!      
 
 
       // Calculate some gauge invariant observables just for info.
