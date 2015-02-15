@@ -4,8 +4,6 @@
 namespace Chroma
 {
 
-  // These can probably be consolodated into a single function,
-  // that also accepts information about masked regions
   void CoolInnerLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps);
 
   // file, lattice, nrow

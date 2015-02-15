@@ -1,5 +1,7 @@
 #include "chromabase.h"
 #include "interpolate.h"
+#include "util/gauge/reunit.h"
+#include "util/gauge/su3proj.h"
 
 namespace Chroma 
 {
@@ -11,13 +13,13 @@ namespace Chroma
     // p = 3 is hypercube inner links
 
     // These are the links to consider
-    LatticeInt link[Nd];
-    LatticeBoolean linkB[Nd];
+    multi1d<LatticeInt> link(Nd);
+    multi1d<LatticeBoolean> linkB(Nd);
     for(int mu=0; mu<Nd; ++mu) { link[mu] = 0; }
 
     // These are the plaquettes to consider
-    LatticeInt plaquette[Nd][Nd];
-    LatticeBoolean plaquetteB[Nd][Nd];
+    multi2d<LatticeInt> plaquette(Nd,Nd);
+    multi2d<LatticeBoolean> plaquetteB(Nd,Nd);
     for(int mu=0; mu<Nd; ++mu) {
       for(int nu=0; nu<Nd; ++nu) {
         plaquette[mu][nu] = 0;
@@ -27,28 +29,90 @@ namespace Chroma
     // Considered links are true
     for(int mu=0; mu<Nd; ++mu) {
       for(int sig=0; sig<Nd; ++sig) {
-        if (sig!=mu) link[mu] += Layout::latticeCoordinate(sig);
+        if (sig!=mu) link[mu] += (Layout::latticeCoordinate(sig)%2);
       }
-      linkB[mu] = (link[mu]%2==p);
+      linkB[mu] = (link[mu]==p);
     }
 
     // Considered plaquettes true
     for(int mu=0; mu<Nd; ++mu) {
       for(int nu=0; nu<Nd; ++nu) {
         for(int sig=0; sig<Nd; ++sig) {
-          if ( (sig!=mu)&&(sig!=nu) ) plaquette[mu][nu] += Layout::latticeCoordinate(sig);
+          if ( (sig!=mu)&&(sig!=nu) ) plaquette[mu][nu] += (Layout::latticeCoordinate(sig)%2);
         }
-        plaquetteB[mu][nu] = (plaquette[mu][nu]%2==p);
+        plaquetteB[mu][nu] = (plaquette[mu][nu]==p);
       }
     }
 
-    // Here, for each mu staples need to be computed given nu
-    // Then plaquette mask is applied to the staples
+    // For each mu, sum staples in +-nu direction only
+    LatticeColorMatrix tmp;
+    multi2d<LatticeColorMatrix> staple(Nd,Nd);
+    for(int mu=0; mu<Nd; ++mu ) {
+      for(int nu=0; nu<Nd; ++nu ) staple[mu][nu]= zero;
+      for(int nu = 0; nu<Nd; ++nu) {
+        if(nu == mu)  continue;
+        tmp = adj(shift(u[mu],FORWARD,nu));
+        staple[mu][nu] = u[mu]*shift(u[nu],FORWARD,mu)*tmp;
+        tmp = u[nu]*shift(u[mu],FORWARD,nu);
+        staple[mu][nu] += adj( shift(u[mu],BACKWARD,mu) ) * shift(tmp,BACKWARD,mu);
+      }
+    }
+
     // Then add up nu component of staples; only the unmasked ones contribute
-    // Then mask links
+    multi1d<LatticeColorMatrix> staple_sum(Nd);
+    for(int mu=0; mu<Nd; ++mu ) {
+      staple_sum[mu] = zero;
+      for(int nu = 0; nu<Nd; ++nu) {
+        if(nu == mu)  continue;
+         staple_sum[mu] += where(plaquetteB[mu][nu], staple[mu][nu], LatticeColorMatrix(zero)); 
+      }
+    }
+
     // Then add masked links to current lattice
-    // Then SU-project all
-    // Finally reunitarize
+    for(int mu=0; mu<Nd; ++mu ) {
+      u[mu] += eps * where(linkB[mu], staple_sum[mu], LatticeColorMatrix(zero));
+    }
+
+    // Then SU-project and Reunitarize
+    LatticeColorMatrix u_unproj;
+    for(int mu=0; mu<Nd; ++mu ) {
+      u_unproj = adj(u[mu]);
+      Double old_tr = sum(real(trace(u[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
+      Double new_tr;
+ 
+      int n_smr = 0;
+      bool wrswitch = false;                      /* Write out iterations? */
+      Double conver = 1;
+
+      // THESE SHOULD NOT BE HARD CODED?
+      const Real BlkAccu(0.001);
+      int BlkMax=1000; 
+
+      while ( toBool(conver > BlkAccu)  &&  n_smr < BlkMax )
+      {
+        ++n_smr;
+    
+        // Loop over SU(2) subgroup index
+        for(int su2_index = 0; su2_index < Nc*(Nc-1)/2; ++su2_index)
+          su3proj(u[mu], u_unproj, su2_index);
+    
+        /* Reunitarize */
+        reunit(u[mu]);
+    
+        /* Calculate the trace */
+        new_tr = sum(real(trace(u[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
+    
+        if( wrswitch )
+          QDPIO::cout << " BLOCK: " << n_smr << " old_tr= " << old_tr << " new_tr= " << new_tr;
+    
+        /* Normalized convergence criterion: */
+        conver = fabs((new_tr - old_tr) / old_tr);
+        old_tr = new_tr;
+      }
+
+
+    }
+
 
   }
 
