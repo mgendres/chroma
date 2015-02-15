@@ -34,14 +34,22 @@ namespace Chroma
         // P : plaquette
         // C : cube
         // H : hypercube
+
         // tol : stop cooling when relative change in average is below tol
-        // eps : coefficent in front of staple at each stage of cool
 	Double tolP;
 	Double tolC;
 	Double tolH;
+        // eps : coefficent in front of staple at each stage of cool
 	Double epsP;
 	Double epsC;
 	Double epsH;
+        // These control the SU(2)/SU(3) projection
+        Real BlkAccu;
+        int BlkMax;
+        // This writesout the field after each interpolation stage
+        bool debug;
+        std::string debug_file;
+
       } param;
 
       struct NamedObject_t

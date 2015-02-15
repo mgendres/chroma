@@ -55,8 +55,10 @@ namespace Chroma
       read(inputtop, "epsP", input.epsP);
       read(inputtop, "epsC", input.epsC);
       read(inputtop, "epsH", input.epsH);
-
-
+      read(inputtop, "BlkAccu", input.BlkAccu);
+      read(inputtop, "BlkMax", input.BlkMax);
+      read(inputtop, "debug", input.debug);
+      read(inputtop, "debug_file", input.debug_file);
     }
 
     //! write output
@@ -71,6 +73,10 @@ namespace Chroma
       write(xml, "epsP", input.epsP);
       write(xml, "epsC", input.epsC);
       write(xml, "epsH", input.epsH);
+      write(xml, "BlkAccu", input.BlkAccu);
+      write(xml, "BlkMax", input.BlkMax);
+      write(xml, "debug", input.debug);
+      write(xml, "debug_file", input.debug_file);
 
 
       pop(xml);
@@ -266,23 +272,37 @@ namespace Chroma
       Double plaq, r;
 
       multi1d<string> debugf(4);
-      debugf[0] = "debug_0";
-      debugf[1] = "debug_1";
-      debugf[2] = "debug_2";
-      debugf[3] = "debug_3";
+      debugf[0] = params.param.debug_file+"-0";
+      debugf[1] = params.param.debug_file+"-1";
+      debugf[2] = params.param.debug_file+"-2";
+      debugf[3] = params.param.debug_file+"-3";
 
-      DebugWrite(debugf[0], interp_u, nrow);
+      if(params.param.debug)
+        DebugWrite(debugf[0], interp_u, nrow);
+
+      // THESE SHOULD NOT BE HARD CODED?
+      // What are ideal values?
+      // I assume performing an SU(3) projection on an already SU(3)
+      // Matrix doesn't do anything. True?
+      const Real BlkAccu(params.param.BlkAccu);
+      int BlkMax(params.param.BlkMax);
+
       for (int p=1; p<Nd; ++p) {
+
         QDPIO::cout << "Interpolating " << p+1 << "-cell..." << endl;
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+
         do {
           plaq = w_plaq;
-          CoolInnerLinks( interp_u, p, eps[p]);
+          CoolInnerLinks( interp_u, p, eps[p], BlkAccu, BlkMax);
           MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
           r = w_plaq / plaq - 1.0;
           QDPIO::cout << "\t Plaq Tot : " << w_plaq << "; Plaq Diff : " << r <<endl;
         } while ( toBool(r>tol[p]) );
-        DebugWrite(debugf[p], interp_u, nrow);
+
+        if(params.param.debug)
+          DebugWrite(debugf[p], interp_u, nrow);
+
       }
 
       // Calculate some gauge invariant observables just for info.

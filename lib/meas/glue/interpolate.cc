@@ -6,7 +6,7 @@
 namespace Chroma 
 {
 
-  void CoolInnerLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps)
+  void CoolInnerLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps, Real BlkAccu, int BlkMax)
   {
 
     //  links takes the values:
@@ -115,8 +115,8 @@ namespace Chroma
 
     // Then SU-project and Reunitarize
     LatticeColorMatrix u_unproj;
-    for(int mu=0; mu<Nd; ++mu ) {
-      // Project links in mu direction
+    for(int mu=0; mu<Nd; ++mu ) { // Project links in mu direction
+
       u_unproj = adj(u[mu]);
       Double old_tr = sum(real(trace(u[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
       Double new_tr;
@@ -124,13 +124,6 @@ namespace Chroma
       int n_smr = 0;
       bool wrswitch = false;                      /* Write out iterations? */
       Double conver = 1;
-
-      // THESE SHOULD NOT BE HARD CODED?
-      // What are ideal values?
-      // I assume performing an SU(3) projection on an already SU(3)
-      // Matrix doesn't do anything. True?
-      const Real BlkAccu(0.001);
-      int BlkMax=1000; 
 
       while ( toBool(conver > BlkAccu)  &&  n_smr < BlkMax )
       {
@@ -152,6 +145,7 @@ namespace Chroma
         /* Normalized convergence criterion: */
         conver = fabs((new_tr - old_tr) / old_tr);
         old_tr = new_tr;
+
       }
 
 

@@ -10,7 +10,8 @@ namespace Chroma
   // p = 4 : hypercube
   // Cooling is done by adding staple to link with coeef eps
   // then SU-projecting
-  void CoolInnerLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps);
+  // BlkAccu and BlkMax are parameters cotrolling the SU-projection
+  void CoolInnerLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps, Real BlkAccu, int BlkMax);
 
   // file, lattice, nrow
   void DebugWrite(const std::string &,  const multi1d<LatticeColorMatrix> &, multi1d<int>&);
