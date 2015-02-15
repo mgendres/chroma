@@ -4,6 +4,16 @@
 namespace Chroma 
 {
 
+  void CoolPlaquettes( multi1d<LatticeColorMatrix> & u)
+  {
+  }
+  void CoolCubes( multi1d<LatticeColorMatrix> & u)
+  {
+  }
+  void CoolHypercubes( multi1d<LatticeColorMatrix> & u)
+  {
+  }
+
   void DebugWrite(const std::string& file, const multi1d<LatticeColorMatrix>& u, multi1d<int>& nrow)
   {
 

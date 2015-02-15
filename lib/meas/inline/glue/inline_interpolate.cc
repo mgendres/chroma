@@ -231,11 +231,7 @@ namespace Chroma
       // Calculate some gauge invariant observables just for info.
       MesPlq(xml_out, "GaugeObservables", u);
       
-///////// INTERPOLATION CODE GOES HERE !!!      
-//      multi1d<int> size(Nd);
-//      size = Layout::lattSize();
-//      DebugWrite("debug_gauge.dat", u, size);
-
+///////// INTERPOLATION CODE ///////     
       multi1d<LatticeColorMatrix> interp_u = u ; 
 
       Double tol = params.param.tol ;
@@ -247,8 +243,8 @@ namespace Chroma
       MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
       do {
         plaq = w_plaq;
-        // face cooling function goes here
-        wilson_flow(xml_out, interp_u, 1, 0.1 , -1); // replace this!
+        CoolPlaquettes( interp_u);
+//        wilson_flow(xml_out, interp_u, 1, 0.1 , -1); // this is just to test the stopping condition
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         r = w_plaq / plaq - 1.0;
         QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
@@ -258,7 +254,7 @@ namespace Chroma
       MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
       do {
         plaq = w_plaq;
-        // cube cooling function goes here
+        CoolCubes( interp_u);
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         r = w_plaq / plaq - 1.0;
         QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
@@ -268,7 +264,7 @@ namespace Chroma
       MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
       do {
         plaq = w_plaq;
-        // hypercube cooling function goes here
+        CoolHypercubes( interp_u);
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         r = w_plaq / plaq - 1.0;
         QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
