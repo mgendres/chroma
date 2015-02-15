@@ -34,6 +34,9 @@ namespace Chroma
 	Double tolP;
 	Double tolC;
 	Double tolH;
+	Double epsP;
+	Double epsC;
+	Double epsH;
       } param;
 
       struct NamedObject_t

@@ -4,10 +4,9 @@
 namespace Chroma
 {
 
-
-  void CoolPlaquettes( multi1d<LatticeColorMatrix> & u);
-  void CoolCubes( multi1d<LatticeColorMatrix> & u);
-  void CoolHypercubes( multi1d<LatticeColorMatrix> & u);
+  // These can probably be consolodated into a single function,
+  // that also accepts information about masked regions
+  void CoolInnerLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps);
 
   // file, lattice, nrow
   void DebugWrite(const std::string &,  const multi1d<LatticeColorMatrix> &, multi1d<int>&);

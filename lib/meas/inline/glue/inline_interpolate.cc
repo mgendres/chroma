@@ -52,6 +52,10 @@ namespace Chroma
       read(inputtop, "tolP", input.tolP);
       read(inputtop, "tolC", input.tolC);
       read(inputtop, "tolH", input.tolH);
+      read(inputtop, "epsP", input.epsP);
+      read(inputtop, "epsC", input.epsC);
+      read(inputtop, "epsH", input.epsH);
+
 
     }
 
@@ -64,6 +68,10 @@ namespace Chroma
       write(xml, "tolP", input.tolP);
       write(xml, "tolC", input.tolC);
       write(xml, "tolH", input.tolH);
+      write(xml, "epsP", input.epsP);
+      write(xml, "epsC", input.epsC);
+      write(xml, "epsH", input.epsH);
+
 
       pop(xml);
     }
@@ -236,46 +244,37 @@ namespace Chroma
       MesPlq(xml_out, "GaugeObservables", u);
       
 ///////// INTERPOLATION CODE ///////     
+
       multi1d<LatticeColorMatrix> interp_u = u ; 
 
-      Double tolP = params.param.tolP ;
-      Double tolC = params.param.tolC ;
-      Double tolH = params.param.tolH ;
-      Double w_plaq, s_plaq, t_plaq, link;
+      Double tol[Nd];
+      tol[0] = 0; // this one isn't used
+      tol[1] = params.param.tolP;
+      tol[2] = params.param.tolC;
+      tol[3] = params.param.tolH;
+
+      Double eps[Nd];
+      eps[0] = 0; // this one isn't used
+      eps[1] = params.param.epsP;
+      eps[2] = params.param.epsC;
+      eps[3] = params.param.epsH;
+
+      Double w_plaq, s_plaq, t_plaq, link; // only w_plaq is used
       multi2d<Double> plane_plaq;
       Double plaq, r;
 
-      QDPIO::cout << "Cooling plaquette bulk..." << endl;
-      MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
-      do {
-        plaq = w_plaq;
-        CoolPlaquettes( interp_u);
-//        wilson_flow(xml_out, interp_u, 1, 0.1 , -1); // this is just to test the stopping condition
+      for (int p=1; p<Nd; ++p) {
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
-        r = w_plaq / plaq - 1.0;
-        QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
-      } while ( toBool(r>tolP) );
-
-      QDPIO::cout << "Cooling cube bulk..." << endl;
-      MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
-      do {
-        plaq = w_plaq;
-        CoolCubes( interp_u);
-        MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
-        r = w_plaq / plaq - 1.0;
-        QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
-      } while ( toBool(r>tolC) );
-
-      QDPIO::cout << "Cooling hypercube bulk..." << endl;
-      MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
-      do {
-        plaq = w_plaq;
-        CoolHypercubes( interp_u);
-        MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
-        r = w_plaq / plaq - 1.0;
-        QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
-      } while ( toBool(r>tolH) );
-
+        do {
+          plaq = w_plaq;
+          CoolInnerLinks( interp_u, p, eps[p]);
+//          wilson_flow(xml_out, interp_u, 1, 0.1 , -1); // this is just to test the stopping condition
+          MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+          r = w_plaq / plaq - 1.0;
+          QDPIO::cout << "\tRelative plaq difference between sweeps for inner " \
+                      <<  p << "-cell links : " <<  r << endl;
+        } while ( toBool(r>tol[p]) );
+      }
 
       // Calculate some gauge invariant observables just for info.
       MesPlq(xml_out, "InterpolatedGaugeObservables", interp_u);

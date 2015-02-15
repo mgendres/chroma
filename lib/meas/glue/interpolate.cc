@@ -4,14 +4,52 @@
 namespace Chroma 
 {
 
-  void CoolPlaquettes( multi1d<LatticeColorMatrix> & u)
+  void CoolInnerLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps)
   {
-  }
-  void CoolCubes( multi1d<LatticeColorMatrix> & u)
-  {
-  }
-  void CoolHypercubes( multi1d<LatticeColorMatrix> & u)
-  {
+    // p = 1 is plaquette inner links
+    // p = 2 is cube inner links
+    // p = 3 is hypercube inner links
+
+    // These are the links to consider
+    LatticeInt link[Nd];
+    LatticeBoolean linkB[Nd];
+    for(int mu=0; mu<Nd; ++mu) { link[mu] = 0; }
+
+    // These are the plaquettes to consider
+    LatticeInt plaquette[Nd][Nd];
+    LatticeBoolean plaquetteB[Nd][Nd];
+    for(int mu=0; mu<Nd; ++mu) {
+      for(int nu=0; nu<Nd; ++nu) {
+        plaquette[mu][nu] = 0;
+      }
+    }
+
+    // Considered links are true
+    for(int mu=0; mu<Nd; ++mu) {
+      for(int sig=0; sig<Nd; ++sig) {
+        if (sig!=mu) link[mu] += Layout::latticeCoordinate(sig);
+      }
+      linkB[mu] = (link[mu]%2==p);
+    }
+
+    // Considered plaquettes true
+    for(int mu=0; mu<Nd; ++mu) {
+      for(int nu=0; nu<Nd; ++nu) {
+        for(int sig=0; sig<Nd; ++sig) {
+          if ( (sig!=mu)&&(sig!=nu) ) plaquette[mu][nu] += Layout::latticeCoordinate(sig);
+        }
+        plaquetteB[mu][nu] = (plaquette[mu][nu]%2==p);
+      }
+    }
+
+    // Here, for each mu staples need to be computed given nu
+    // Then plaquette mask is applied to the staples
+    // Then add up nu component of staples; only the unmasked ones contribute
+    // Then mask links
+    // Then add masked links to current lattice
+    // Then SU-project all
+    // Finally reunitarize
+
   }
 
   void DebugWrite(const std::string& file, const multi1d<LatticeColorMatrix>& u, multi1d<int>& nrow)
