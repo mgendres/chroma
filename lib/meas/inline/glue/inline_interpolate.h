@@ -31,9 +31,7 @@ namespace Chroma
       struct Param_t
       {
 	int version ;
-//	int nstep ;
-//	Real  wtime ;
-//	int t_dir ; // the time direction of measurements 
+	Double tol;
       } param;
 
       struct NamedObject_t

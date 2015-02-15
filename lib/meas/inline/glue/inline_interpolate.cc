@@ -12,10 +12,10 @@
 #include "meas/inline/make_xml_file.h"
 #include "meas/inline/io/named_objmap.h"
 
-/*
+
 // The wilson flow code
 #include "meas/glue/wilson_flow_w.h"
-*/
+
 
 namespace Chroma 
 { 
@@ -49,9 +49,7 @@ namespace Chroma
       XMLReader inputtop(xml, path);
 
       read(inputtop, "version", input.version);
-//      read(inputtop, "nstep", input.nstep);
-//      read(inputtop, "wtime", input.wtime);
-//      read(inputtop, "t_dir",input.t_dir);
+      read(inputtop, "tol", input.tol);
 
     }
 
@@ -61,9 +59,7 @@ namespace Chroma
       push(xml, path);
     
       write(xml, "version", input.version);
-//      write(xml, "nstep", input.nstep);
-//      write(xml, "wtime", input.wtime);
-//      write(xml, "t_dir",input.t_dir);
+      write(xml, "tol", input.tol);
 
       pop(xml);
     }
@@ -236,16 +232,52 @@ namespace Chroma
       MesPlq(xml_out, "GaugeObservables", u);
       
 ///////// INTERPOLATION CODE GOES HERE !!!      
-      multi1d<int> size(Nd);
-      size = Layout::lattSize();
-      DebugWrite("debug_gauge.dat", u, size);
+//      multi1d<int> size(Nd);
+//      size = Layout::lattSize();
+//      DebugWrite("debug_gauge.dat", u, size);
 
-
-      
       multi1d<LatticeColorMatrix> interp_u = u ; 
-//      Real eps  = params.param.wtime/params.param.nstep ;
 
-//      wilson_flow(xml_out, wf_u, params.param.nstep,eps ,params.param.t_dir) ;
+      Double tol = params.param.tol ;
+      Double w_plaq, s_plaq, t_plaq, link;
+      multi2d<Double> plane_plaq;
+      Double plaq, r;
+
+      QDPIO::cout << "Cooling plaquette bulk..." << endl;
+      MesPlq(u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+      do {
+        plaq = w_plaq;
+        // face cooling function goes here
+        wilson_flow(xml_out, interp_u, 1, 0.1 , -1); // replace this!
+        MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+        r = w_plaq / plaq - 1.0;
+        QDPIO::cout << "Relative plaq difference between sweeps : " <<  r << endl;
+      } while ( toBool(r>tol) );
+
+      QDPIO::cout << "Cooling cube bulk..." << endl;
+      MesPlq(u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+      do {
+        plaq = w_plaq;
+        // cube cooling function goes here
+        MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+        r = w_plaq / plaq - 1.0;
+        QDPIO::cout << "Relative plaq difference between sweeps : " <<  r << endl;
+      } while ( toBool(r>tol) );
+
+      QDPIO::cout << "Cooling hypercube bulk..." << endl;
+      MesPlq(u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+      do {
+        plaq = w_plaq;
+        // hypercube cooling function goes here
+        MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+        r = w_plaq / plaq - 1.0;
+        QDPIO::cout << "Relative plaq difference between sweeps : " <<  r << endl;
+      } while ( toBool(r>tol) );
+
+
+
+
+
 
 ///////// INTERPOLATION CODE GOES HERE !!!      
 
