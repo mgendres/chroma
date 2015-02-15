@@ -33,10 +33,10 @@ namespace Chroma
 
     // This holds integer values used to identify links
     multi1d<LatticeInt> link(Nd);
+    for(int mu=0; mu<Nd; ++mu) { link[mu] = 0; }
 
     // This is the link mask
     multi1d<LatticeBoolean> linkB(Nd);
-    for(int mu=0; mu<Nd; ++mu) { link[mu] = 0; }
 
     // LinkB is true for links of value p
     for(int mu=0; mu<Nd; ++mu) {
@@ -65,14 +65,14 @@ namespace Chroma
 
     // This holds integer values used to identify plaquettes
     multi2d<LatticeInt> plaquette(Nd,Nd);
-
-    // This is the plaquette mask
-    multi2d<LatticeBoolean> plaquetteB(Nd,Nd);
     for(int mu=0; mu<Nd; ++mu) {
       for(int nu=0; nu<Nd; ++nu) {
         plaquette[mu][nu] = 0;
       }
     }
+
+    // This is the plaquette mask
+    multi2d<LatticeBoolean> plaquetteB(Nd,Nd);
 
     // plaquetteB is true for plaquettes of value p-1;
     // staples on these plaquettes will be included in the cooling
@@ -98,7 +98,7 @@ namespace Chroma
       }
     }
 
-    // Then do a maskes add of all the staples perp to mu
+    // Then do a masked add of all the staples perp to mu
     multi1d<LatticeColorMatrix> staple_sum(Nd);
     for(int mu=0; mu<Nd; ++mu ) {
       staple_sum[mu] = zero;
@@ -108,7 +108,7 @@ namespace Chroma
       }
     }
 
-    // Then do masked add of the staple sum to the current
+    // Then do masked add of the staple sum to the current link
     for(int mu=0; mu<Nd; ++mu ) {
       u[mu] += eps * where(linkB[mu], staple_sum[mu], LatticeColorMatrix(zero));
     }

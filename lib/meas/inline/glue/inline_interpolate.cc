@@ -280,10 +280,6 @@ namespace Chroma
       if(params.param.debug)
         DebugWrite(debugf[0], interp_u, nrow);
 
-      // THESE SHOULD NOT BE HARD CODED?
-      // What are ideal values?
-      // I assume performing an SU(3) projection on an already SU(3)
-      // Matrix doesn't do anything. True?
       const Real BlkAccu(params.param.BlkAccu);
       int BlkMax(params.param.BlkMax);
 
