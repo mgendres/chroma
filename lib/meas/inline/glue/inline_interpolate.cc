@@ -244,6 +244,8 @@ namespace Chroma
       MesPlq(xml_out, "GaugeObservables", u);
       
 ///////// INTERPOLATION CODE ///////     
+      multi1d<int> nrow(4);
+      nrow = Layout::lattSize();
 
       multi1d<LatticeColorMatrix> interp_u = u ; 
 
@@ -263,6 +265,13 @@ namespace Chroma
       multi2d<Double> plane_plaq;
       Double plaq, r;
 
+      multi1d<string> debugf(4);
+      debugf[0] = "debug_0";
+      debugf[1] = "debug_1";
+      debugf[2] = "debug_2";
+      debugf[3] = "debug_3";
+
+      DebugWrite(debugf[0], interp_u, nrow);
       for (int p=1; p<Nd; ++p) {
         QDPIO::cout << "Interpolating " << p << "-cell..." << endl;
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
@@ -273,6 +282,7 @@ namespace Chroma
           r = w_plaq / plaq - 1.0;
           QDPIO::cout << "\t Plaq Tot : " << w_plaq << "; Plaq Diff : " << r <<endl;
         } while ( toBool(r>tol[p]) );
+        DebugWrite(debugf[p], interp_u, nrow);
       }
 
       // Calculate some gauge invariant observables just for info.
