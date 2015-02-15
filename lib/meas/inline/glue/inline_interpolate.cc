@@ -49,7 +49,9 @@ namespace Chroma
       XMLReader inputtop(xml, path);
 
       read(inputtop, "version", input.version);
-      read(inputtop, "tol", input.tol);
+      read(inputtop, "tolP", input.tolP);
+      read(inputtop, "tolC", input.tolC);
+      read(inputtop, "tolH", input.tolH);
 
     }
 
@@ -59,7 +61,9 @@ namespace Chroma
       push(xml, path);
     
       write(xml, "version", input.version);
-      write(xml, "tol", input.tol);
+      write(xml, "tolP", input.tolP);
+      write(xml, "tolC", input.tolC);
+      write(xml, "tolH", input.tolH);
 
       pop(xml);
     }
@@ -234,7 +238,9 @@ namespace Chroma
 ///////// INTERPOLATION CODE ///////     
       multi1d<LatticeColorMatrix> interp_u = u ; 
 
-      Double tol = params.param.tol ;
+      Double tolP = params.param.tolP ;
+      Double tolC = params.param.tolC ;
+      Double tolH = params.param.tolH ;
       Double w_plaq, s_plaq, t_plaq, link;
       multi2d<Double> plane_plaq;
       Double plaq, r;
@@ -248,7 +254,7 @@ namespace Chroma
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         r = w_plaq / plaq - 1.0;
         QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
-      } while ( toBool(r>tol) );
+      } while ( toBool(r>tolP) );
 
       QDPIO::cout << "Cooling cube bulk..." << endl;
       MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
@@ -258,7 +264,7 @@ namespace Chroma
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         r = w_plaq / plaq - 1.0;
         QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
-      } while ( toBool(r>tol) );
+      } while ( toBool(r>tolC) );
 
       QDPIO::cout << "Cooling hypercube bulk..." << endl;
       MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
@@ -268,7 +274,7 @@ namespace Chroma
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         r = w_plaq / plaq - 1.0;
         QDPIO::cout << "\tRelative plaq difference between sweeps : " <<  r << endl;
-      } while ( toBool(r>tol) );
+      } while ( toBool(r>tolH) );
 
 
       // Calculate some gauge invariant observables just for info.

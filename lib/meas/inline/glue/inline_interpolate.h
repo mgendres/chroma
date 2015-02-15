@@ -31,7 +31,9 @@ namespace Chroma
       struct Param_t
       {
 	int version ;
-	Double tol;
+	Double tolP;
+	Double tolC;
+	Double tolH;
       } param;
 
       struct NamedObject_t
