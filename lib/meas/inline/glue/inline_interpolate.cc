@@ -273,7 +273,7 @@ namespace Chroma
 
       DebugWrite(debugf[0], interp_u, nrow);
       for (int p=1; p<Nd; ++p) {
-        QDPIO::cout << "Interpolating " << p << "-cell..." << endl;
+        QDPIO::cout << "Interpolating " << p+1 << "-cell..." << endl;
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         do {
           plaq = w_plaq;

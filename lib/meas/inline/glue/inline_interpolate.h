@@ -31,6 +31,11 @@ namespace Chroma
       struct Param_t
       {
 	int version ;
+        // P : plaquette
+        // C : cube
+        // H : hypercube
+        // tol : stop cooling when relative change in average is below tol
+        // eps : coefficent in front of staple at each stage of cool
 	Double tolP;
 	Double tolC;
 	Double tolH;

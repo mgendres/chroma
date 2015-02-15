@@ -8,25 +8,37 @@ namespace Chroma
 
   void CoolInnerLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps)
   {
-    // p = 1 is plaquette inner links
-    // p = 2 is cube inner links
-    // p = 3 is hypercube inner links
 
-    // These are the links to consider
+    //  links takes the values:
+    //
+    //          -------------
+    //        /      /      /|
+    //       /      /      / |
+    //       --------------  |
+    //     /      /|     /| /|
+    //    /      / 2    / |/ |
+    //   /--0-------0--/  |  |
+    //   |      | 2    | /| /
+    //   0      1/     0/ |/
+    //   |--1---|--1---|  /
+    //   0      1      0 /
+    //   |      |      |/
+    //   ---0------0---
+    //
+    // where
+    // 0 : plaquette boundary links
+    // 1 : cube boundary links
+    // 2 : hypercube boundary links
+    // 3 : hypercube bulk links
+
+    // This holds integer values used to identify links
     multi1d<LatticeInt> link(Nd);
+
+    // This is the link mask
     multi1d<LatticeBoolean> linkB(Nd);
     for(int mu=0; mu<Nd; ++mu) { link[mu] = 0; }
 
-    // These are the plaquettes to consider
-    multi2d<LatticeInt> plaquette(Nd,Nd);
-    multi2d<LatticeBoolean> plaquetteB(Nd,Nd);
-    for(int mu=0; mu<Nd; ++mu) {
-      for(int nu=0; nu<Nd; ++nu) {
-        plaquette[mu][nu] = 0;
-      }
-    }
-
-    // Considered links are true
+    // LinkB is true for links of value p
     for(int mu=0; mu<Nd; ++mu) {
       for(int sig=0; sig<Nd; ++sig) {
         if (sig!=mu) link[mu] += (Layout::latticeCoordinate(sig)%2);
@@ -34,7 +46,36 @@ namespace Chroma
       linkB[mu] = (link[mu]==p);
     }
 
-    // Considered plaquettes true
+    //  plaquettes take the values:
+    //
+    //          -------------
+    //        /      /      /|
+    //       /      /      / |
+    //       --------------  |
+    //     /      /|     /| /|
+    //    /      /1|    / |/ |
+    //   /-------------/  |  |
+    //   |      | /    | /| /
+    //   |  0   |/ 0   |/ |/
+    //   |------|------|  /
+    //   |      |      | /
+    //   |  0   |  0   |/
+    //   --------------
+    //
+
+    // This holds integer values used to identify plaquettes
+    multi2d<LatticeInt> plaquette(Nd,Nd);
+
+    // This is the plaquette mask
+    multi2d<LatticeBoolean> plaquetteB(Nd,Nd);
+    for(int mu=0; mu<Nd; ++mu) {
+      for(int nu=0; nu<Nd; ++nu) {
+        plaquette[mu][nu] = 0;
+      }
+    }
+
+    // plaquetteB is true for plaquettes of value p-1;
+    // staples on these plaquettes will be included in the cooling
     for(int mu=0; mu<Nd; ++mu) {
       for(int nu=0; nu<Nd; ++nu) {
         for(int sig=0; sig<Nd; ++sig) {
@@ -57,7 +98,7 @@ namespace Chroma
       }
     }
 
-    // Then add up nu component of staples; only the unmasked ones contribute
+    // Then do a maskes add of all the staples perp to mu
     multi1d<LatticeColorMatrix> staple_sum(Nd);
     for(int mu=0; mu<Nd; ++mu ) {
       staple_sum[mu] = zero;
@@ -67,7 +108,7 @@ namespace Chroma
       }
     }
 
-    // Then add masked links to current lattice
+    // Then do masked add of the staple sum to the current
     for(int mu=0; mu<Nd; ++mu ) {
       u[mu] += eps * where(linkB[mu], staple_sum[mu], LatticeColorMatrix(zero));
     }
@@ -75,6 +116,7 @@ namespace Chroma
     // Then SU-project and Reunitarize
     LatticeColorMatrix u_unproj;
     for(int mu=0; mu<Nd; ++mu ) {
+      // Project links in mu direction
       u_unproj = adj(u[mu]);
       Double old_tr = sum(real(trace(u[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
       Double new_tr;
@@ -85,6 +127,8 @@ namespace Chroma
 
       // THESE SHOULD NOT BE HARD CODED?
       // What are ideal values?
+      // I assume performing an SU(3) projection on an already SU(3)
+      // Matrix doesn't do anything. True?
       const Real BlkAccu(0.001);
       int BlkMax=1000; 
 
