@@ -264,15 +264,14 @@ namespace Chroma
       Double plaq, r;
 
       for (int p=1; p<Nd; ++p) {
+        QDPIO::cout << "Interpolating " << p << "-cell..." << endl;
         MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
         do {
           plaq = w_plaq;
           CoolInnerLinks( interp_u, p, eps[p]);
-//          wilson_flow(xml_out, interp_u, 1, 0.1 , -1); // this is just to test the stopping condition
           MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
           r = w_plaq / plaq - 1.0;
-          QDPIO::cout << "\tRelative plaq difference between sweeps for inner " \
-                      <<  p << "-cell links : " <<  r << endl;
+          QDPIO::cout << "\t Plaq Tot : " << w_plaq << "; Plaq Diff : " << r <<endl;
         } while ( toBool(r>tol[p]) );
       }
 

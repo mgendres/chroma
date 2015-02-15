@@ -40,7 +40,7 @@ namespace Chroma
         for(int sig=0; sig<Nd; ++sig) {
           if ( (sig!=mu)&&(sig!=nu) ) plaquette[mu][nu] += (Layout::latticeCoordinate(sig)%2);
         }
-        plaquetteB[mu][nu] = (plaquette[mu][nu]==p);
+        plaquetteB[mu][nu] = (plaquette[mu][nu]==p-1);
       }
     }
 
@@ -51,10 +51,9 @@ namespace Chroma
       for(int nu=0; nu<Nd; ++nu ) staple[mu][nu]= zero;
       for(int nu = 0; nu<Nd; ++nu) {
         if(nu == mu)  continue;
-        tmp = adj(shift(u[mu],FORWARD,nu));
-        staple[mu][nu] = u[mu]*shift(u[nu],FORWARD,mu)*tmp;
-        tmp = u[nu]*shift(u[mu],FORWARD,nu);
-        staple[mu][nu] += adj( shift(u[mu],BACKWARD,mu) ) * shift(tmp,BACKWARD,mu);
+        staple[mu][nu] += u[nu] * shift(u[mu], FORWARD, nu)  * adj(shift(u[nu], FORWARD, mu));
+        tmp = adj(u[nu]) * u[mu] * shift(u[nu], FORWARD, mu);
+        staple[mu][nu] += shift(tmp, BACKWARD, nu );
       }
     }
 
@@ -85,6 +84,7 @@ namespace Chroma
       Double conver = 1;
 
       // THESE SHOULD NOT BE HARD CODED?
+      // What are ideal values?
       const Real BlkAccu(0.001);
       int BlkMax=1000; 
 
