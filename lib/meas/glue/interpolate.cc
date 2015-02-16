@@ -109,16 +109,17 @@ namespace Chroma
     }
 
     // Then do masked add of the staple sum to the current link
+    multi1d<LatticeColorMatrix> u_proj = u;
     for(int mu=0; mu<Nd; ++mu ) {
-      u[mu] += eps * where(linkB[mu], staple_sum[mu], LatticeColorMatrix(zero));
+      u_proj[mu] += eps * where(linkB[mu], staple_sum[mu], LatticeColorMatrix(zero));
     }
 
     // Then SU-project and Reunitarize
     LatticeColorMatrix u_unproj;
     for(int mu=0; mu<Nd; ++mu ) { // Project links in mu direction
 
-      u_unproj = adj(u[mu]);
-      Double old_tr = sum(real(trace(u[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
+      u_unproj = adj(u_proj[mu]);
+      Double old_tr = sum(real(trace(u_proj[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
       Double new_tr;
  
       int n_smr = 0;
@@ -131,13 +132,13 @@ namespace Chroma
     
         // Loop over SU(2) subgroup index
         for(int su2_index = 0; su2_index < Nc*(Nc-1)/2; ++su2_index)
-          su3proj(u[mu], u_unproj, su2_index);
+          su3proj(u_proj[mu], u_unproj, su2_index);
     
         /* Reunitarize */
-        reunit(u[mu]);
+        reunit(u_proj[mu]);
     
         /* Calculate the trace */
-        new_tr = sum(real(trace(u[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
+        new_tr = sum(real(trace(u_proj[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
     
         if( wrswitch )
           QDPIO::cout << " BLOCK: " << n_smr << " old_tr= " << old_tr << " new_tr= " << new_tr;
@@ -148,7 +149,11 @@ namespace Chroma
 
       }
 
+    }
 
+    // Finally replace the old links with the new ones
+    for(int mu=0; mu<Nd; ++mu ) {
+      u[mu] = where(linkB[mu], u_proj[mu], u[mu]);
     }
 
 
