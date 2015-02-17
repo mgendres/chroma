@@ -477,9 +477,9 @@ am__libchroma_a_SOURCES_DIST = actions/boson/operator/klein_gord.cc \
 	meas/glue/mesfield.cc meas/glue/wloop.cc meas/glue/mesplq.cc \
 	meas/glue/polylp.cc meas/glue/wilslp.cc \
 	meas/glue/wilson_flow_w.cc meas/glue/qactden.cc \
-	meas/glue/qnaive.cc meas/glue/block.cc meas/glue/fuzglue.cc \
-	meas/glue/gluecor.cc meas/glue/polycor.cc \
-	meas/hadron/distillution_factory.cc \
+	meas/glue/qnaive.cc meas/glue/interpolate.cc \
+	meas/glue/block.cc meas/glue/fuzglue.cc meas/glue/gluecor.cc \
+	meas/glue/polycor.cc meas/hadron/distillution_factory.cc \
 	meas/hadron/dilution_scheme_aggregate.cc \
 	meas/hadron/hadron_seqsource.cc meas/hadron/hadron_contract.cc \
 	meas/hadron/hadron_contract_aggregate.cc \
@@ -847,6 +847,7 @@ am__libchroma_a_SOURCES_DIST = actions/boson/operator/klein_gord.cc \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.cc \
 	meas/inline/glue/inline_glueball_ops.cc \
 	meas/inline/glue/inline_wilson_flow.cc \
+	meas/inline/glue/inline_interpolate.cc \
 	meas/inline/hadron/inline_hadron_aggregate.cc \
 	meas/inline/hadron/inline_hadron_contract.cc \
 	meas/inline/hadron/inline_gauge_transf_obj.cc \
@@ -1244,9 +1245,9 @@ am_libchroma_a_OBJECTS = actions/boson/operator/klein_gord.$(OBJEXT) \
 	meas/glue/wloop.$(OBJEXT) meas/glue/mesplq.$(OBJEXT) \
 	meas/glue/polylp.$(OBJEXT) meas/glue/wilslp.$(OBJEXT) \
 	meas/glue/wilson_flow_w.$(OBJEXT) meas/glue/qactden.$(OBJEXT) \
-	meas/glue/qnaive.$(OBJEXT) meas/glue/block.$(OBJEXT) \
-	meas/glue/fuzglue.$(OBJEXT) meas/glue/gluecor.$(OBJEXT) \
-	meas/glue/polycor.$(OBJEXT) \
+	meas/glue/qnaive.$(OBJEXT) meas/glue/interpolate.$(OBJEXT) \
+	meas/glue/block.$(OBJEXT) meas/glue/fuzglue.$(OBJEXT) \
+	meas/glue/gluecor.$(OBJEXT) meas/glue/polycor.$(OBJEXT) \
 	meas/hadron/distillution_factory.$(OBJEXT) \
 	meas/hadron/dilution_scheme_aggregate.$(OBJEXT) \
 	meas/hadron/hadron_seqsource.$(OBJEXT) \
@@ -1641,6 +1642,7 @@ am_libchroma_a_OBJECTS = actions/boson/operator/klein_gord.$(OBJEXT) \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.$(OBJEXT) \
 	meas/inline/glue/inline_glueball_ops.$(OBJEXT) \
 	meas/inline/glue/inline_wilson_flow.$(OBJEXT) \
+	meas/inline/glue/inline_interpolate.$(OBJEXT) \
 	meas/inline/hadron/inline_hadron_aggregate.$(OBJEXT) \
 	meas/inline/hadron/inline_hadron_contract.$(OBJEXT) \
 	meas/inline/hadron/inline_gauge_transf_obj.$(OBJEXT) \
@@ -2028,9 +2030,10 @@ am__nobase_include_HEADERS_DIST = chroma_config.h chroma.h \
 	meas/glue/mesplq.h meas/glue/polylp.h meas/glue/wloop.h \
 	meas/glue/fuzwilp.h meas/glue/wilslp.h \
 	meas/glue/wilson_flow_w.h meas/glue/qactden.h \
-	meas/glue/qnaive.h meas/glue/block.h meas/glue/fuzglue.h \
-	meas/glue/gluecor.h meas/glue/polycor.h meas/hadron/hadron.h \
-	meas/hadron/baryon_operator.h meas/hadron/dilution_scheme.h \
+	meas/glue/qnaive.h meas/glue/interpolate.h meas/glue/block.h \
+	meas/glue/fuzglue.h meas/glue/gluecor.h meas/glue/polycor.h \
+	meas/hadron/hadron.h meas/hadron/baryon_operator.h \
+	meas/hadron/dilution_scheme.h \
 	meas/hadron/dilution_quark_source_const_w.h \
 	meas/hadron/dilution_scheme_aggregate.h \
 	meas/hadron/dilution_scheme_factory.h \
@@ -2521,6 +2524,7 @@ am__nobase_include_HEADERS_DIST = chroma_config.h chroma.h \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.h \
 	meas/inline/glue/inline_glueball_ops.h \
 	meas/inline/glue/inline_wilson_flow.h \
+	meas/inline/glue/inline_interpolate.h \
 	meas/inline/hadron/hadron.h \
 	meas/inline/hadron/inline_hadron_aggregate.h \
 	meas/inline/hadron/inline_hadron_contract.h \
@@ -3073,9 +3077,10 @@ nobase_include_HEADERS = chroma_config.h chroma.h chromabase.h \
 	meas/glue/mesplq.h meas/glue/polylp.h meas/glue/wloop.h \
 	meas/glue/fuzwilp.h meas/glue/wilslp.h \
 	meas/glue/wilson_flow_w.h meas/glue/qactden.h \
-	meas/glue/qnaive.h meas/glue/block.h meas/glue/fuzglue.h \
-	meas/glue/gluecor.h meas/glue/polycor.h meas/hadron/hadron.h \
-	meas/hadron/baryon_operator.h meas/hadron/dilution_scheme.h \
+	meas/glue/qnaive.h meas/glue/interpolate.h meas/glue/block.h \
+	meas/glue/fuzglue.h meas/glue/gluecor.h meas/glue/polycor.h \
+	meas/hadron/hadron.h meas/hadron/baryon_operator.h \
+	meas/hadron/dilution_scheme.h \
 	meas/hadron/dilution_quark_source_const_w.h \
 	meas/hadron/dilution_scheme_aggregate.h \
 	meas/hadron/dilution_scheme_factory.h \
@@ -3566,6 +3571,7 @@ nobase_include_HEADERS = chroma_config.h chroma.h chromabase.h \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.h \
 	meas/inline/glue/inline_glueball_ops.h \
 	meas/inline/glue/inline_wilson_flow.h \
+	meas/inline/glue/inline_interpolate.h \
 	meas/inline/hadron/hadron.h \
 	meas/inline/hadron/inline_hadron_aggregate.h \
 	meas/inline/hadron/inline_hadron_contract.h \
@@ -3903,9 +3909,9 @@ libchroma_a_SOURCES = actions/boson/operator/klein_gord.cc \
 	meas/glue/mesfield.cc meas/glue/wloop.cc meas/glue/mesplq.cc \
 	meas/glue/polylp.cc meas/glue/wilslp.cc \
 	meas/glue/wilson_flow_w.cc meas/glue/qactden.cc \
-	meas/glue/qnaive.cc meas/glue/block.cc meas/glue/fuzglue.cc \
-	meas/glue/gluecor.cc meas/glue/polycor.cc \
-	meas/hadron/distillution_factory.cc \
+	meas/glue/qnaive.cc meas/glue/interpolate.cc \
+	meas/glue/block.cc meas/glue/fuzglue.cc meas/glue/gluecor.cc \
+	meas/glue/polycor.cc meas/hadron/distillution_factory.cc \
 	meas/hadron/dilution_scheme_aggregate.cc \
 	meas/hadron/hadron_seqsource.cc meas/hadron/hadron_contract.cc \
 	meas/hadron/hadron_contract_aggregate.cc \
@@ -4258,6 +4264,7 @@ libchroma_a_SOURCES = actions/boson/operator/klein_gord.cc \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.cc \
 	meas/inline/glue/inline_glueball_ops.cc \
 	meas/inline/glue/inline_wilson_flow.cc \
+	meas/inline/glue/inline_interpolate.cc \
 	meas/inline/hadron/inline_hadron_aggregate.cc \
 	meas/inline/hadron/inline_hadron_contract.cc \
 	meas/inline/hadron/inline_gauge_transf_obj.cc \
@@ -5116,6 +5123,8 @@ meas/glue/wilson_flow_w.$(OBJEXT): meas/glue/$(am__dirstamp) \
 meas/glue/qactden.$(OBJEXT): meas/glue/$(am__dirstamp) \
 	meas/glue/$(DEPDIR)/$(am__dirstamp)
 meas/glue/qnaive.$(OBJEXT): meas/glue/$(am__dirstamp) \
+	meas/glue/$(DEPDIR)/$(am__dirstamp)
+meas/glue/interpolate.$(OBJEXT): meas/glue/$(am__dirstamp) \
 	meas/glue/$(DEPDIR)/$(am__dirstamp)
 meas/glue/block.$(OBJEXT): meas/glue/$(am__dirstamp) \
 	meas/glue/$(DEPDIR)/$(am__dirstamp)
@@ -6422,6 +6431,9 @@ meas/inline/glue/inline_glueball_ops.$(OBJEXT):  \
 meas/inline/glue/inline_wilson_flow.$(OBJEXT):  \
 	meas/inline/glue/$(am__dirstamp) \
 	meas/inline/glue/$(DEPDIR)/$(am__dirstamp)
+meas/inline/glue/inline_interpolate.$(OBJEXT):  \
+	meas/inline/glue/$(am__dirstamp) \
+	meas/inline/glue/$(DEPDIR)/$(am__dirstamp)
 meas/inline/hadron/$(am__dirstamp):
 	@$(MKDIR_P) meas/inline/hadron
 	@: > meas/inline/hadron/$(am__dirstamp)
@@ -7429,6 +7441,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@meas/glue/$(DEPDIR)/fuzglue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/glue/$(DEPDIR)/fuzwilp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/glue/$(DEPDIR)/gluecor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@meas/glue/$(DEPDIR)/interpolate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/glue/$(DEPDIR)/mesfield.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/glue/$(DEPDIR)/mesplq.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/glue/$(DEPDIR)/polycor.Po@am__quote@
@@ -7526,6 +7539,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_glue_diag_matelem_colorvec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_glue_matelem_colorvec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_glueball_ops.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_interpolate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_plaquette.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_polylp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_qactden.Po@am__quote@

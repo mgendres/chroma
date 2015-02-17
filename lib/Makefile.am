@@ -231,6 +231,7 @@ nobase_include_HEADERS = \
 	meas/glue/fuzwilp.h meas/glue/wilslp.h meas/glue/wilson_flow_w.h \
 	meas/glue/qactden.h \
 	meas/glue/qnaive.h \
+	meas/glue/interpolate.h \
         meas/glue/block.h meas/glue/fuzglue.h meas/glue/gluecor.h meas/glue/polycor.h \
         meas/hadron/hadron.h \
 	meas/hadron/baryon_operator.h \
@@ -832,6 +833,7 @@ nobase_include_HEADERS += \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.h \
 	meas/inline/glue/inline_glueball_ops.h \
 	meas/inline/glue/inline_wilson_flow.h \
+	meas/inline/glue/inline_interpolate.h \
 	meas/inline/hadron/hadron.h \
 	meas/inline/hadron/inline_hadron_aggregate.h \
 	meas/inline/hadron/inline_hadron_contract.h \
@@ -1195,6 +1197,7 @@ libchroma_a_SOURCES = \
 	meas/glue/wilslp.cc meas/glue/wilson_flow_w.cc  \
 	meas/glue/qactden.cc \
 	meas/glue/qnaive.cc \
+	meas/glue/interpolate.cc \
         meas/glue/block.cc meas/glue/fuzglue.cc meas/glue/gluecor.cc meas/glue/polycor.cc \
         meas/hadron/distillution_factory.cc \
 	meas/hadron/dilution_scheme_aggregate.cc \
@@ -1667,6 +1670,7 @@ libchroma_a_SOURCES += \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.cc \
 	meas/inline/glue/inline_glueball_ops.cc \
 	meas/inline/glue/inline_wilson_flow.cc \
+	meas/inline/glue/inline_interpolate.cc \
 	meas/inline/hadron/inline_hadron_aggregate.cc \
 	meas/inline/hadron/inline_hadron_contract.cc \
 	meas/inline/hadron/inline_gauge_transf_obj.cc \
