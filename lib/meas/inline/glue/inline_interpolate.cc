@@ -290,10 +290,10 @@ namespace Chroma
 
         do {
           plaq = w_plaq;
-          CoolInnerLinks( interp_u, p, eps[p], BlkAccu, BlkMax);
+          CoolCellInteriorLinks( interp_u, p, eps[p], BlkAccu, BlkMax);
           MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
           r = w_plaq / plaq - 1.0;
-          QDPIO::cout << "\t Plaq Tot : " << w_plaq << "; Plaq Diff : " << r <<endl;
+          QDPIO::cout << "\t Plaq. Tot. : " << w_plaq << "; Plaq. Rel. Diff. : " << r <<endl;
         } while ( toBool(r>tol[p]) );
 
         if(params.param.debug)

@@ -6,7 +6,7 @@
 namespace Chroma 
 {
 
-  void CoolInnerLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps, Real BlkAccu, int BlkMax)
+  void CoolCellInteriorLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps, Real BlkAccu, int BlkMax)
   {
 
     //  links takes the values:
@@ -99,29 +99,34 @@ namespace Chroma
     }
 
     // Then do a masked add of all the staples perp to mu
-    multi1d<LatticeColorMatrix> staple_sum(Nd);
+    multi1d<LatticeColorMatrix> u_smear = u;
     for(int mu=0; mu<Nd; ++mu ) {
-      staple_sum[mu] = zero;
       for(int nu = 0; nu<Nd; ++nu) {
         if(nu == mu)  continue;
-         staple_sum[mu] += where(plaquetteB[mu][nu], staple[mu][nu], LatticeColorMatrix(zero)); 
+         u_smear[mu] += eps * where(plaquetteB[mu][nu], staple[mu][nu], LatticeColorMatrix(zero)); 
       }
     }
 
-    // Then do masked add of the staple sum to the current link
-    multi1d<LatticeColorMatrix> u_proj = u;
+    // Then SU-project and Reunitarize
+    SU3proj( u_smear, BlkAccu, BlkMax);
+
+    // Finally do a masked replace of the old links with the new ones
     for(int mu=0; mu<Nd; ++mu ) {
-      u_proj[mu] += eps * where(linkB[mu], staple_sum[mu], LatticeColorMatrix(zero));
+      u[mu] = where(linkB[mu], u_smear[mu], u[mu]);
     }
 
-    // Then SU-project and Reunitarize
+  }
+
+  void SU3proj( multi1d<LatticeColorMatrix> & u, Real BlkAccu, int BlkMax)
+  {
+
     LatticeColorMatrix u_unproj;
     for(int mu=0; mu<Nd; ++mu ) { // Project links in mu direction
 
-      u_unproj = adj(u_proj[mu]);
-      Double old_tr = sum(real(trace(u_proj[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
+      u_unproj = adj(u[mu]);
+      Double old_tr = sum(real(trace(u[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
       Double new_tr;
- 
+
       int n_smr = 0;
       bool wrswitch = false;                      /* Write out iterations? */
       Double conver = 1;
@@ -129,34 +134,26 @@ namespace Chroma
       while ( toBool(conver > BlkAccu)  &&  n_smr < BlkMax )
       {
         ++n_smr;
-    
+
         // Loop over SU(2) subgroup index
         for(int su2_index = 0; su2_index < Nc*(Nc-1)/2; ++su2_index)
-          su3proj(u_proj[mu], u_unproj, su2_index);
-    
+          su3proj(u[mu], u_unproj, su2_index);
+
         /* Reunitarize */
-        reunit(u_proj[mu]);
-    
+        reunit(u[mu]);
+
         /* Calculate the trace */
-        new_tr = sum(real(trace(u_proj[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
-    
+        new_tr = sum(real(trace(u[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
+
         if( wrswitch )
           QDPIO::cout << " BLOCK: " << n_smr << " old_tr= " << old_tr << " new_tr= " << new_tr;
-    
+
         /* Normalized convergence criterion: */
         conver = fabs((new_tr - old_tr) / old_tr);
         old_tr = new_tr;
 
       }
-
     }
-
-    // Finally replace the old links with the new ones
-    for(int mu=0; mu<Nd; ++mu ) {
-      u[mu] = where(linkB[mu], u_proj[mu], u[mu]);
-    }
-
-
   }
 
   void DebugWrite(const std::string& file, const multi1d<LatticeColorMatrix>& u, multi1d<int>& nrow)
