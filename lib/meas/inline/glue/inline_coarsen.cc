@@ -259,10 +259,11 @@ namespace Chroma
 
       // Shift fields and multiply
       // Then set all links at siteB=false to zero
+      ColorMatrix one = 1.0;
       LatticeColorMatrix tmp;
       for(int mu=0; mu<Nd; ++mu ) {
         tmp = u[mu] * shift(u[mu], FORWARD, mu);
-        coarse_u[mu] = where(siteB, tmp, LatticeColorMatrix(zero) );
+        coarse_u[mu] = where(siteB, tmp, LatticeColorMatrix(one) );
       }
 
       if(params.param.debug)
