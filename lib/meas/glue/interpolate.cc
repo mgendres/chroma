@@ -9,6 +9,7 @@ namespace Chroma
   void CoolCellInteriorLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps, Real BlkAccu, int BlkMax)
   {
 
+
     //  links takes the values:
     //
     //          -------------
@@ -33,7 +34,7 @@ namespace Chroma
 
     // This holds integer values used to identify links
     multi1d<LatticeInt> link(Nd);
-    for(int mu=0; mu<Nd; ++mu) { link[mu] = 0; }
+    for(int mu=0; mu<Nd; ++mu) { link[mu] = zero; }
 
     // This is the link mask
     multi1d<LatticeBoolean> linkB(Nd);
@@ -41,7 +42,8 @@ namespace Chroma
     // LinkB is true for links of value p
     for(int mu=0; mu<Nd; ++mu) {
       for(int sig=0; sig<Nd; ++sig) {
-        if (sig!=mu) link[mu] += (Layout::latticeCoordinate(sig)%2);
+        if (sig==mu) continue;
+        link[mu] += Layout::latticeCoordinate(sig)%2;
       }
       linkB[mu] = (link[mu]==p);
     }
@@ -67,7 +69,7 @@ namespace Chroma
     multi2d<LatticeInt> plaquette(Nd,Nd);
     for(int mu=0; mu<Nd; ++mu) {
       for(int nu=0; nu<Nd; ++nu) {
-        plaquette[mu][nu] = 0;
+        plaquette[mu][nu] = zero;
       }
     }
 
@@ -79,9 +81,14 @@ namespace Chroma
     for(int mu=0; mu<Nd; ++mu) {
       for(int nu=0; nu<Nd; ++nu) {
         for(int sig=0; sig<Nd; ++sig) {
-          if ( (sig!=mu)&&(sig!=nu) ) plaquette[mu][nu] += (Layout::latticeCoordinate(sig)%2);
+          if ( (sig==mu)||(sig==nu) ) continue;
+          plaquette[mu][nu] += Layout::latticeCoordinate(sig)%2;
         }
-        plaquetteB[mu][nu] = (plaquette[mu][nu]==p-1);
+        if (mu==nu) {
+          plaquetteB[mu][nu] = false; // this probably doesn't matter
+        } else { 
+          plaquetteB[mu][nu] = (plaquette[mu][nu]==p-1);
+        }
       }
     }
 
@@ -89,7 +96,7 @@ namespace Chroma
     LatticeColorMatrix tmp;
     multi2d<LatticeColorMatrix> staple(Nd,Nd);
     for(int mu=0; mu<Nd; ++mu ) {
-      for(int nu=0; nu<Nd; ++nu ) staple[mu][nu]= zero;
+      for(int nu = 0; nu<Nd; ++nu ) staple[mu][nu]= zero;
       for(int nu = 0; nu<Nd; ++nu) {
         if(nu == mu)  continue;
         staple[mu][nu] += u[nu] * shift(u[mu], FORWARD, nu)  * adj(shift(u[nu], FORWARD, mu));
@@ -103,7 +110,7 @@ namespace Chroma
     for(int mu=0; mu<Nd; ++mu ) {
       for(int nu = 0; nu<Nd; ++nu) {
         if(nu == mu)  continue;
-         u_smear[mu] += eps * where(plaquetteB[mu][nu], staple[mu][nu], LatticeColorMatrix(zero)); 
+        u_smear[mu] += eps * where(plaquetteB[mu][nu], staple[mu][nu], LatticeColorMatrix(zero)); 
       }
     }
 
@@ -111,6 +118,7 @@ namespace Chroma
     SU3proj( u_smear, BlkAccu, BlkMax);
 
     // Finally do a masked replace of the old links with the new ones
+    // provided links originate from sites with siteB=true
     for(int mu=0; mu<Nd; ++mu ) {
       u[mu] = where(linkB[mu], u_smear[mu], u[mu]);
     }
@@ -124,6 +132,7 @@ namespace Chroma
     for(int mu=0; mu<Nd; ++mu ) { // Project links in mu direction
 
       u_unproj = adj(u[mu]);
+      reunit(u[mu]);
       Double old_tr = sum(real(trace(u[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
       Double new_tr;
 
@@ -140,13 +149,24 @@ namespace Chroma
           su3proj(u[mu], u_unproj, su2_index);
 
         /* Reunitarize */
-        reunit(u[mu]);
+       // reunit(u[mu]);
+        {
+          LatticeBoolean bad;
+          int numbad;
+          reunit(u[mu], bad, numbad, REUNITARIZE_LABEL);
+          if ( numbad > 0 )
+          {
+            QDPIO::cout << "BLOCK: WARNING unitarity violation\n";
+            QDPIO::cout << "   n_smr = " << n_smr << "\n";
+            QDPIO::cout << "   mu= " << mu << "  numbad= " << numbad << endl;
+          }
+        }
 
         /* Calculate the trace */
         new_tr = sum(real(trace(u[mu] * u_unproj))) / toDouble(Layout::vol()*Nc);
 
         if( wrswitch )
-          QDPIO::cout << " BLOCK: " << n_smr << " old_tr= " << old_tr << " new_tr= " << new_tr;
+          QDPIO::cout << " BLOCK: " << n_smr << " old_tr= " << old_tr << " new_tr= " << new_tr << "\n";
 
         /* Normalized convergence criterion: */
         conver = fabs((new_tr - old_tr) / old_tr);
