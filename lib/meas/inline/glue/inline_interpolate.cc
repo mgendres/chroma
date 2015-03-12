@@ -269,7 +269,7 @@ namespace Chroma
 
       Double w_plaq, s_plaq, t_plaq, link; // only w_plaq is used
       multi2d<Double> plane_plaq;
-      Double plaq, r;
+      Double m_plaq, r;
 
       multi1d<string> debugf(4);
       debugf[0] = params.param.debug_file+"-0";
@@ -286,14 +286,18 @@ namespace Chroma
       for (int p=1; p<Nd; ++p) {
 
         QDPIO::cout << "Interpolating " << p+1 << "-cell..." << endl;
-        MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+        MaskedMesPlaq(m_plaq, interp_u, p-1);
 
         do {
-          plaq = w_plaq;
+          r = -m_plaq;
           CoolCellInteriorLinks( interp_u, p, eps[p], BlkAccu, BlkMax);
+          MaskedMesPlaq(m_plaq, interp_u, p-1);
+          r /= m_plaq;
+          r += 1.0;
           MesPlq(interp_u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
-          r = fabs(w_plaq / plaq - 1.0);
-          QDPIO::cout << "\t Plaq. Tot. : " << w_plaq << "; Plaq. Rel. Diff. : " << r <<endl;
+          QDPIO::cout << "\t Plaq. Tot. : " << w_plaq;
+          QDPIO::cout << " | Masked Plaq. : " << m_plaq;
+          QDPIO::cout << " | Masked Plaq. Rel. Diff. : " << r <<endl;
         } while ( toBool(r>tol[p]) );
 
         if(params.param.debug)

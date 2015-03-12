@@ -6,9 +6,11 @@
 namespace Chroma 
 {
 
-  void CoolCellInteriorLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps, Real BlkAccu, int BlkMax)
+
+  void GetLinkMask(multi1d<LatticeBoolean>& linkB, int p)
   {
 
+    linkB.resize(Nd);
 
     //  links takes the values:
     //
@@ -36,9 +38,6 @@ namespace Chroma
     multi1d<LatticeInt> link(Nd);
     for(int mu=0; mu<Nd; ++mu) { link[mu] = zero; }
 
-    // This is the link mask
-    multi1d<LatticeBoolean> linkB(Nd);
-
     // LinkB is true for links of value p
     for(int mu=0; mu<Nd; ++mu) {
       for(int sig=0; sig<Nd; ++sig) {
@@ -47,6 +46,13 @@ namespace Chroma
       }
       linkB[mu] = (link[mu]==p);
     }
+
+  }
+
+  void GetPlaquetteMask(multi2d<LatticeBoolean>& plaquetteB, int p)
+  {
+
+    plaquetteB.resize(Nd,Nd);
 
     //  plaquettes take the values:
     //
@@ -73,10 +79,7 @@ namespace Chroma
       }
     }
 
-    // This is the plaquette mask
-    multi2d<LatticeBoolean> plaquetteB(Nd,Nd);
-
-    // plaquetteB is true for plaquettes of value p-1;
+    // plaquetteB is true for plaquettes of value p;
     // staples on these plaquettes will be included in the cooling
     for(int mu=0; mu<Nd; ++mu) {
       for(int nu=0; nu<Nd; ++nu) {
@@ -87,10 +90,53 @@ namespace Chroma
         if (mu==nu) {
           plaquetteB[mu][nu] = false; // this probably doesn't matter
         } else { 
-          plaquetteB[mu][nu] = (plaquette[mu][nu]==p-1);
+          plaquetteB[mu][nu] = (plaquette[mu][nu]==p);
         }
       }
     }
+
+  }
+
+  void MaskedMesPlaq(Double& m_plaq, multi1d<LatticeColorMatrix> & u, int p)
+  {
+
+    multi2d<LatticeBoolean> plaquetteB(Nd,Nd);
+    GetPlaquetteMask(plaquetteB, p);
+
+    m_plaq = 0.0;
+    multi2d<LatticeDouble> plaq(Nd,Nd);
+    for(int mu=1; mu < Nd; ++mu) {
+      for(int nu=0; nu < mu; ++nu) {
+        plaq[mu][nu] = where(plaquetteB[mu][nu], real(trace(u[mu]*shift(u[nu],FORWARD,mu)*adj(shift(u[mu],FORWARD,nu))*adj(u[nu]))), Real(0.0));
+        m_plaq += sum(plaq[mu][nu]);
+      }
+    }
+
+    // Normalization; lazy man's approach
+    Double n_plaq(0.0);
+    for(int mu=1; mu < Nd; ++mu) {
+      for(int nu=0; nu < mu; ++nu) {
+        n_plaq += sum(where(plaquetteB[mu][nu], LatticeDouble(1.0), LatticeDouble(0.0)));
+      }
+    }
+
+
+    m_plaq /= Nc*n_plaq;
+
+  }
+
+  void CoolCellInteriorLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps, Real BlkAccu, int BlkMax)
+  {
+
+    if (p<1) {
+      QDP_error_exit("CoolCellInteriorLinks : p must be greater than zero!");
+    }
+
+    multi1d<LatticeBoolean> linkB(Nd);
+    GetLinkMask(linkB, p);
+
+    multi2d<LatticeBoolean> plaquetteB(Nd,Nd);
+    GetPlaquetteMask(plaquetteB, p-1);
 
     // For each mu, sum staples in +-nu direction only
     LatticeColorMatrix tmp;

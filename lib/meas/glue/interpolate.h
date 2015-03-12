@@ -13,11 +13,20 @@ namespace Chroma
   // BlkAccu and BlkMax are parameters cotrolling the SU-projection
   void CoolCellInteriorLinks( multi1d<LatticeColorMatrix> & u, int p, Double eps, Real BlkAccu, int BlkMax);
 
+  // Determines which links to keep
+  void GetLinkMask(multi1d<LatticeBoolean>& linkB, int p);
+
+  // Determines which plaquettes to keep
+  void GetPlaquetteMask(multi2d<LatticeBoolean>& plaquetteB, int p);
+
   // SU(3) projection
   void SU3proj( multi1d<LatticeColorMatrix> & u, Real BlkAccu, int BlkMax);
 
   // file, lattice, nrow
   void DebugWrite(const std::string &,  const multi1d<LatticeColorMatrix> &, multi1d<int>&);
+
+  // Compute average plaquette on masked plaquettes labeled by p
+  void MaskedMesPlaq(Double & m_plaq, multi1d<LatticeColorMatrix> & u, int p);
 
 } // namespace Chroma
 
