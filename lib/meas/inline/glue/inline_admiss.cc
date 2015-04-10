@@ -231,19 +231,18 @@ namespace Chroma
       nrow = Layout::lattSize();
 
       // Compute plaquettes
-      multi2d<LatticeDouble> plaquette;
-      multi2d<LatticeInt> plaquetteB;
-      plaquette.resize(Nd,Nd);
+      multi2d<LatticeDouble> plaquette(Nd,Nd);
       plaquette = zero;
       for(int mu=1; mu < Nd; ++mu)
       for(int nu=0; nu < mu; ++nu) {
-        plaquette[mu][nu] = Nc-real(trace(u[mu]*shift(u[nu],FORWARD,mu)*adj(shift(u[mu],FORWARD,nu))*adj(u[nu])));
+        plaquette[mu][nu] = Nc;
+        plaquette[mu][nu] -= real(trace(u[mu]*shift(u[nu],FORWARD,mu)*adj(shift(u[mu],FORWARD,nu))*adj(u[nu])));
         plaquette[mu][nu] /= Nc;
       }
 
-      // Compute fractions
+      // Compute fraction of plaquettes over s, for a given s
       Double tot;
-      int steps= params.param.n_steps;
+      int steps = params.param.n_steps;
       multi1d<Double> s_vec(steps); 
       multi1d<Double> frac_vec(steps); 
       double s = params.param.s_min;
