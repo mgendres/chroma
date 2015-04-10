@@ -849,6 +849,7 @@ am__libchroma_a_SOURCES_DIST = actions/boson/operator/klein_gord.cc \
 	meas/inline/glue/inline_wilson_flow.cc \
 	meas/inline/glue/inline_interpolate.cc \
 	meas/inline/glue/inline_coarsen.cc \
+	meas/inline/glue/inline_admiss.cc \
 	meas/inline/hadron/inline_hadron_aggregate.cc \
 	meas/inline/hadron/inline_hadron_contract.cc \
 	meas/inline/hadron/inline_gauge_transf_obj.cc \
@@ -1645,6 +1646,7 @@ am_libchroma_a_OBJECTS = actions/boson/operator/klein_gord.$(OBJEXT) \
 	meas/inline/glue/inline_wilson_flow.$(OBJEXT) \
 	meas/inline/glue/inline_interpolate.$(OBJEXT) \
 	meas/inline/glue/inline_coarsen.$(OBJEXT) \
+	meas/inline/glue/inline_admiss.$(OBJEXT) \
 	meas/inline/hadron/inline_hadron_aggregate.$(OBJEXT) \
 	meas/inline/hadron/inline_hadron_contract.$(OBJEXT) \
 	meas/inline/hadron/inline_gauge_transf_obj.$(OBJEXT) \
@@ -2527,7 +2529,8 @@ am__nobase_include_HEADERS_DIST = chroma_config.h chroma.h \
 	meas/inline/glue/inline_glueball_ops.h \
 	meas/inline/glue/inline_wilson_flow.h \
 	meas/inline/glue/inline_interpolate.h \
-	meas/inline/glue/inline_coarsen.h meas/inline/hadron/hadron.h \
+	meas/inline/glue/inline_coarsen.h \
+	meas/inline/glue/inline_admiss.h meas/inline/hadron/hadron.h \
 	meas/inline/hadron/inline_hadron_aggregate.h \
 	meas/inline/hadron/inline_hadron_contract.h \
 	meas/inline/hadron/inline_gauge_transf_obj.h \
@@ -3574,7 +3577,8 @@ nobase_include_HEADERS = chroma_config.h chroma.h chromabase.h \
 	meas/inline/glue/inline_glueball_ops.h \
 	meas/inline/glue/inline_wilson_flow.h \
 	meas/inline/glue/inline_interpolate.h \
-	meas/inline/glue/inline_coarsen.h meas/inline/hadron/hadron.h \
+	meas/inline/glue/inline_coarsen.h \
+	meas/inline/glue/inline_admiss.h meas/inline/hadron/hadron.h \
 	meas/inline/hadron/inline_hadron_aggregate.h \
 	meas/inline/hadron/inline_hadron_contract.h \
 	meas/inline/hadron/inline_gauge_transf_obj.h \
@@ -4268,6 +4272,7 @@ libchroma_a_SOURCES = actions/boson/operator/klein_gord.cc \
 	meas/inline/glue/inline_wilson_flow.cc \
 	meas/inline/glue/inline_interpolate.cc \
 	meas/inline/glue/inline_coarsen.cc \
+	meas/inline/glue/inline_admiss.cc \
 	meas/inline/hadron/inline_hadron_aggregate.cc \
 	meas/inline/hadron/inline_hadron_contract.cc \
 	meas/inline/hadron/inline_gauge_transf_obj.cc \
@@ -6440,6 +6445,9 @@ meas/inline/glue/inline_interpolate.$(OBJEXT):  \
 meas/inline/glue/inline_coarsen.$(OBJEXT):  \
 	meas/inline/glue/$(am__dirstamp) \
 	meas/inline/glue/$(DEPDIR)/$(am__dirstamp)
+meas/inline/glue/inline_admiss.$(OBJEXT):  \
+	meas/inline/glue/$(am__dirstamp) \
+	meas/inline/glue/$(DEPDIR)/$(am__dirstamp)
 meas/inline/hadron/$(am__dirstamp):
 	@$(MKDIR_P) meas/inline/hadron
 	@: > meas/inline/hadron/$(am__dirstamp)
@@ -7539,6 +7547,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/eig/$(DEPDIR)/inline_ritz_H_w.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/gfix/$(DEPDIR)/inline_coulgauge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/gfix/$(DEPDIR)/inline_gfix_aggregate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_admiss.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_apply_gaugestate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_coarsen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_fuzwilp.Po@am__quote@

@@ -835,6 +835,7 @@ nobase_include_HEADERS += \
 	meas/inline/glue/inline_wilson_flow.h \
 	meas/inline/glue/inline_interpolate.h \
 	meas/inline/glue/inline_coarsen.h \
+	meas/inline/glue/inline_admiss.h \
 	meas/inline/hadron/hadron.h \
 	meas/inline/hadron/inline_hadron_aggregate.h \
 	meas/inline/hadron/inline_hadron_contract.h \
@@ -1673,6 +1674,7 @@ libchroma_a_SOURCES += \
 	meas/inline/glue/inline_wilson_flow.cc \
 	meas/inline/glue/inline_interpolate.cc \
 	meas/inline/glue/inline_coarsen.cc \
+	meas/inline/glue/inline_admiss.cc \
 	meas/inline/hadron/inline_hadron_aggregate.cc \
 	meas/inline/hadron/inline_hadron_contract.cc \
 	meas/inline/hadron/inline_gauge_transf_obj.cc \
