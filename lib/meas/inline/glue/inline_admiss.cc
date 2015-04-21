@@ -235,9 +235,8 @@ namespace Chroma
       plaquette = zero;
       for(int mu=1; mu < Nd; ++mu)
       for(int nu=0; nu < mu; ++nu) {
-        plaquette[mu][nu] = Nc;
+        plaquette[mu][nu] = 1.0;
         plaquette[mu][nu] -= real(trace(u[mu]*shift(u[nu],FORWARD,mu)*adj(shift(u[mu],FORWARD,nu))*adj(u[nu])));
-        plaquette[mu][nu] /= Nc;
       }
 
       // Compute fraction of plaquettes over s, for a given s
