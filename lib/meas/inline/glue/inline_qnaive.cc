@@ -145,6 +145,10 @@ namespace Chroma
     {
       START_CODE();
 
+      StopWatch snoop;
+      snoop.reset();
+      snoop.start();
+
       // Grab the object
       const multi1d<LatticeColorMatrix>& u = 
 	TheNamedObjMap::Instance().getData< multi1d<LatticeColorMatrix> >(params.named_obj.gauge_id);
@@ -159,6 +163,13 @@ namespace Chroma
       write(xml_out, "qtop", qtop);
 
       pop(xml_out); // pop("QTop");
+
+      snoop.stop();
+      QDPIO::cout << name << ": total time = "
+                  << snoop.getTimeInSeconds()
+                  << " secs" << endl;
+
+      QDPIO::cout << name << ": ran successfully" << endl;
 
       END_CODE();
     } 
