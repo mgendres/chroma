@@ -847,6 +847,7 @@ am__libchroma_a_SOURCES_DIST = actions/boson/operator/klein_gord.cc \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.cc \
 	meas/inline/glue/inline_glueball_ops.cc \
 	meas/inline/glue/inline_wilson_flow.cc \
+	meas/inline/glue/inline_wilson_flow_adapt.cc \
 	meas/inline/glue/inline_interpolate.cc \
 	meas/inline/glue/inline_coarsen.cc \
 	meas/inline/glue/inline_admiss.cc \
@@ -1644,6 +1645,7 @@ am_libchroma_a_OBJECTS = actions/boson/operator/klein_gord.$(OBJEXT) \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.$(OBJEXT) \
 	meas/inline/glue/inline_glueball_ops.$(OBJEXT) \
 	meas/inline/glue/inline_wilson_flow.$(OBJEXT) \
+	meas/inline/glue/inline_wilson_flow_adapt.$(OBJEXT) \
 	meas/inline/glue/inline_interpolate.$(OBJEXT) \
 	meas/inline/glue/inline_coarsen.$(OBJEXT) \
 	meas/inline/glue/inline_admiss.$(OBJEXT) \
@@ -2528,6 +2530,7 @@ am__nobase_include_HEADERS_DIST = chroma_config.h chroma.h \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.h \
 	meas/inline/glue/inline_glueball_ops.h \
 	meas/inline/glue/inline_wilson_flow.h \
+	meas/inline/glue/inline_wilson_flow_adapt.h \
 	meas/inline/glue/inline_interpolate.h \
 	meas/inline/glue/inline_coarsen.h \
 	meas/inline/glue/inline_admiss.h meas/inline/hadron/hadron.h \
@@ -3576,6 +3579,7 @@ nobase_include_HEADERS = chroma_config.h chroma.h chromabase.h \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.h \
 	meas/inline/glue/inline_glueball_ops.h \
 	meas/inline/glue/inline_wilson_flow.h \
+	meas/inline/glue/inline_wilson_flow_adapt.h \
 	meas/inline/glue/inline_interpolate.h \
 	meas/inline/glue/inline_coarsen.h \
 	meas/inline/glue/inline_admiss.h meas/inline/hadron/hadron.h \
@@ -4270,6 +4274,7 @@ libchroma_a_SOURCES = actions/boson/operator/klein_gord.cc \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.cc \
 	meas/inline/glue/inline_glueball_ops.cc \
 	meas/inline/glue/inline_wilson_flow.cc \
+	meas/inline/glue/inline_wilson_flow_adapt.cc \
 	meas/inline/glue/inline_interpolate.cc \
 	meas/inline/glue/inline_coarsen.cc \
 	meas/inline/glue/inline_admiss.cc \
@@ -6439,6 +6444,9 @@ meas/inline/glue/inline_glueball_ops.$(OBJEXT):  \
 meas/inline/glue/inline_wilson_flow.$(OBJEXT):  \
 	meas/inline/glue/$(am__dirstamp) \
 	meas/inline/glue/$(DEPDIR)/$(am__dirstamp)
+meas/inline/glue/inline_wilson_flow_adapt.$(OBJEXT):  \
+	meas/inline/glue/$(am__dirstamp) \
+	meas/inline/glue/$(DEPDIR)/$(am__dirstamp)
 meas/inline/glue/inline_interpolate.$(OBJEXT):  \
 	meas/inline/glue/$(am__dirstamp) \
 	meas/inline/glue/$(DEPDIR)/$(am__dirstamp)
@@ -7563,6 +7571,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_random_transf_gauge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_wilslp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_wilson_flow.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_wilson_flow_adapt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/hadron/$(DEPDIR)/inline_annih_prop_matelem_colorvec_w.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/hadron/$(DEPDIR)/inline_apply_fermstate_w.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/hadron/$(DEPDIR)/inline_bar3ptfn_w.Po@am__quote@

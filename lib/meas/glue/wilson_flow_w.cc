@@ -17,6 +17,9 @@
  *
  *   The Wilson flow can be used to determine the lattice spacing.
  *
+
+ *    Adaptive step size code follows arXiv:1301.4388
+
  *
  * See below for additional information about the Wilson flow.
  * 
@@ -230,6 +233,208 @@ namespace Chroma
     pop(xml);  // elem
 
   }
+
+
+
+
+/////////////////
+
+
+  struct Eps
+  {
+    Real this_;
+    Real next_;
+    Real max_;
+    Real cut_;
+  }; 
+
+  void wilson_flow_one_step_adapt(multi1d<LatticeColorMatrix> & u, Eps & rho, Real tol)
+  {
+    int mu, dir;
+    multi1d<LatticeColorMatrix> dest(Nd);
+    multi1d<LatticeColorMatrix> next(Nd);
+
+
+    // -------------------------------------
+
+    multi1d<bool> smear_in_this_dirP(4) ;
+    multi2d<Real> rho_a(4,4) ;
+    multi2d<Real> rho_b1(4,4) ;
+    multi2d<Real> rho_b2(4,4) ;
+    multi2d<Real> rho_c(4,4) ;
+    multi2d<Real> rho_d0(4,4) ;
+    multi2d<Real> rho_d1(4,4) ;
+
+    multi1d<LatticeColorMatrix> u0(u);
+    multi1d<LatticeColorMatrix> du(Nd);
+
+    LatticeColorMatrix  Q, QQ, C ;
+    LatticeColorMatrix  Q2, QQ2  ;
+
+    multi1d<LatticeColorMatrix> Q0(Nd);
+    multi1d<LatticeColorMatrix> Q1(Nd);
+
+    multi1d<LatticeComplex> f;   // routine will resize these
+ 
+    bool go=true;
+
+    while (go) {
+
+      for (mu = 0; mu <= Nd-1; mu++)
+      {
+        smear_in_this_dirP(mu) = true ;
+        for (dir = 0; dir <= Nd-1; dir++)
+        {
+          rho_a[mu][dir] = rho.next_ * 0.25 ;
+  
+          rho_b1[mu][dir] = rho.next_ * 8.0/9.0 ;
+          rho_b2[mu][dir] = rho.next_ * 17.0/36.0 ;
+  
+          rho_c[mu][dir] = rho.next_  * 3.0/4.0 ;
+  
+          rho_d0[mu][dir] = rho.next_ ;
+          rho_d1[mu][dir] = rho.next_ * 2.0 ;
+        }
+      }
+  
+  
+      // This is W1
+      Stouting::smear_links(u0, dest,smear_in_this_dirP, rho_a);
+  
+      for (mu = 0; mu <= Nd-1; mu++)
+      {
+  
+        // this is the second order integrator
+        Stouting::getQsandCs(dest, Q1[mu],QQ,C,mu,smear_in_this_dirP,rho_d1) ;
+        Stouting::getQsandCs(u0   , Q0[mu],QQ,C,mu,smear_in_this_dirP,rho_d0) ;
+  
+        Q = Q1[mu] - Q0[mu] ;
+        QQ = Q * Q ;
+        Stouting::getFs(Q,QQ,f);   // This routine computes the f-s
+            
+        du=(f[0] + f[1]*Q + f[2]*QQ)*u[mu];      
+        // this is the second order integrator
+  
+        Stouting::getQsandCs(dest, Q1[mu],QQ,C,mu,smear_in_this_dirP,rho_b1) ;
+        Stouting::getQsandCs(u0   , Q0[mu],QQ,C,mu,smear_in_this_dirP,rho_b2) ;
+  
+        Q = Q1[mu] - Q0[mu] ;
+        QQ = Q * Q ;
+        Stouting::getFs(Q,QQ,f);   // This routine computes the f-s
+            
+        // Assemble the stout links exp(iQ)U_{mu} 
+        // This is W2
+        next[mu]=(f[0] + f[1]*Q + f[2]*QQ)*dest[mu];      
+  
+      }
+  
+      for (mu = 0; mu <= Nd-1; mu++)
+      {
+        u[mu]    =  next[mu] ;
+        dest[mu] =  next[mu] ;      
+      }
+  
+  
+      for (mu = 0; mu <= Nd-1; mu++)
+      {
+        Stouting::getQsandCs(dest, Q2,QQ,C,mu,smear_in_this_dirP,rho_c) ;
+  
+        Q = Q2 - Q1[mu] + Q0[mu] ;
+        QQ = Q * Q ;
+        Stouting::getFs(Q,QQ,f);   // This routine computes the f-s
+            
+        // Assemble the stout links exp(iQ)U_{mu} 
+        // This is W3
+        next[mu]=(f[0] + f[1]*Q + f[2]*QQ)*dest[mu];      
+  
+      }
+  
+      multi1d<Real> dist(Nd);
+      for (mu = 0; mu <= Nd-1; mu++)
+      {
+        u[mu]    =  next[mu] ;
+        du[mu] = u[mu] - u0[mu];
+        dist[mu] = globalMax( sqrt( localNorm2( du[mu]) ) /(Nc*Nc) );
+      }
+  
+      Real max_dist = dist[0];
+      if ( toDouble(dist[1]) > toDouble(dist[0]) ) max_dist = dist[1];
+      if ( toDouble(dist[2]) > toDouble(dist[1]) ) max_dist = dist[2];
+      if ( toDouble(dist[3]) > toDouble(dist[2]) ) max_dist = dist[3];
+ 
+//      QDPIO::cout << "eps : " << rho.next_ << " , max_dist : " << max_dist  << endl ; 
+
+      if ( toDouble(max_dist) < toDouble(tol) ) {
+        go=false;
+        rho.this_ = rho.next_;
+      } else {
+        u = u0;
+      }
+  
+      rho.next_ = rho.next_ * 0.95*pow(toDouble(tol/max_dist), 1./3.);
+      if ( toDouble(rho.next_) > toDouble(rho.max_) ) { rho.next_ = rho.max_; }
+      if ( toDouble(rho.next_) > toDouble(rho.cut_-rho.this_) ) { rho.next_ = rho.cut_ - rho.this_; }
+
+    }
+
+  }
+
+
+
+
+
+  void wilson_flow(XMLWriter& xml,
+		   multi1d<LatticeColorMatrix> & u, Real wtime, Real tol, 
+		   int jomit)
+  {
+    Real gact4i, gactij;
+//    int dim = nstep + 1 ;
+//    multi1d<Real> gact4i_vec(dim);
+//    multi1d<Real> gactij_vec(dim);
+//    multi1d<Real> step_vec(dim);
+
+    measure_wilson_gauge(u,gactij,gact4i,jomit) ;
+//    gact4i_vec[0] = gact4i ;
+//    gactij_vec[0] = gactij ;
+//    step_vec[0] = 0.0 ;
+
+    QDPIO::cout << "WFLOW " << 0.0 << " " << gact4i << " " << gactij <<  endl ; 
+
+    QDPIO::cout << "START_ANALYZE_wflow" << endl ; 
+    QDPIO::cout << "WFLOW time gact4i gactij" << endl ; 
+
+    Eps eps;
+    eps.this_ = 0.0;
+    eps.next_ = 0.001;
+    eps.max_ = 0.2;
+    eps.cut_ = wtime; // if eps.next_ > eps.cut_ then we'll set eps.next_ = eps.cut_
+    Real t(0.0);
+    while (toFloat(t) < toFloat(wtime))
+    {
+      wilson_flow_one_step_adapt(u, eps, tol) ;
+      t += eps.this_ ;
+      eps.cut_ = wtime - t;
+
+      measure_wilson_gauge(u,gactij,gact4i,jomit) ;
+//      gact4i_vec[i+1] = gact4i ;
+//      gactij_vec[i+1] = gactij ;
+
+      QDPIO::cout << "WFLOW " << t << " " << gact4i << " " << gactij <<  endl ; 
+
+//      step_vec[i+1] = xx ;
+
+    }
+    QDPIO::cout << "END_ANALYZE_wflow" << endl ; 
+
+//    push(xml, "wilson_flow_results");
+//    write(xml,"wflow_step",step_vec) ; 
+//    write(xml,"wflow_gact4i",gact4i_vec) ; 
+//    write(xml,"wflow_gactij",gactij_vec) ; 
+//    pop(xml);  // elem
+
+  }
+
+
 
 
 }  // end namespace Chroma

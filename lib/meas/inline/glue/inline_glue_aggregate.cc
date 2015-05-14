@@ -18,6 +18,7 @@
 #include "meas/inline/glue/inline_interpolate.h"
 #include "meas/inline/glue/inline_coarsen.h"
 #include "meas/inline/glue/inline_admiss.h"
+#include "meas/inline/glue/inline_wilson_flow_adapt.h"
 
 namespace Chroma
 {
@@ -53,6 +54,7 @@ namespace Chroma
 	success &= InlineInterpolateEnv::registerAll();
 	success &= InlineCoarsenEnv::registerAll();
 	success &= InlineAdmissEnv::registerAll();
+	success &= InlineWilsonFlowAdaptEnv::registerAll();
 
 	registered = true;
       }

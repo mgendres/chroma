@@ -833,6 +833,7 @@ nobase_include_HEADERS += \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.h \
 	meas/inline/glue/inline_glueball_ops.h \
 	meas/inline/glue/inline_wilson_flow.h \
+	meas/inline/glue/inline_wilson_flow_adapt.h \
 	meas/inline/glue/inline_interpolate.h \
 	meas/inline/glue/inline_coarsen.h \
 	meas/inline/glue/inline_admiss.h \
@@ -1672,6 +1673,7 @@ libchroma_a_SOURCES += \
 	meas/inline/glue/inline_glue_diag_matelem_colorvec.cc \
 	meas/inline/glue/inline_glueball_ops.cc \
 	meas/inline/glue/inline_wilson_flow.cc \
+	meas/inline/glue/inline_wilson_flow_adapt.cc \
 	meas/inline/glue/inline_interpolate.cc \
 	meas/inline/glue/inline_coarsen.cc \
 	meas/inline/glue/inline_admiss.cc \

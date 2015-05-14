@@ -34,7 +34,7 @@ namespace Chroma
 	int version ;
 	int nstep ;
 	Real  wtime ;
-	int t_dir ; // the time direction of measurements 
+	int t_dir; // the time direction of measurements 
       } param;
 
       struct NamedObject_t
