@@ -39,6 +39,9 @@ namespace Chroma
 
       struct NamedObject_t
       {
+	std::string     eps_in;       /*!< step size */
+	std::string     eps_out;       /*!< step size */
+
 	std::string     gauge_in;       /*!< Gauge fields */
 	std::string     gauge_out;       /*!< Gauge fields */
       } named_obj;

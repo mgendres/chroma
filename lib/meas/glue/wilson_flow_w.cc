@@ -242,6 +242,7 @@ namespace Chroma
 
   struct Eps
   {
+    Real prev_;
     Real this_;
     Real next_;
     Real max_;
@@ -254,6 +255,7 @@ namespace Chroma
     multi1d<LatticeColorMatrix> dest(Nd);
     multi1d<LatticeColorMatrix> next(Nd);
 
+    rho.prev_ = rho.this_;
 
     // -------------------------------------
 
@@ -383,8 +385,8 @@ namespace Chroma
 
 
 
-  void wilson_flow(XMLWriter& xml,
-		   multi1d<LatticeColorMatrix> & u, Real wtime, Real tol, 
+  Real wilson_flow(XMLWriter& xml,
+		   multi1d<LatticeColorMatrix> & u, Real wtime, Real eps_init, Real tol, 
 		   int jomit)
   {
     Real gact4i, gactij;
@@ -406,14 +408,15 @@ namespace Chroma
     QDPIO::cout << "WFLOW time gact4i gactij" << endl ; 
 
     Eps eps;
+    eps.prev_ = 0.0;
     eps.this_ = 0.0;
-    eps.next_ = 0.001;
+    eps.next_ = eps_init;
     eps.max_ = 0.2;
     eps.cut_ = wtime; 
     Real t(0.0);
     int counter(1);
     QDPIO::cout << "WFLOW " << 0.0 << " " << gact4i << " " << gactij <<  endl ; 
-    while (toFloat(t) < toFloat(wtime))
+    while (toFloat(wtime-t) > 1e-7)
     {
       wilson_flow_one_step_adapt(u, eps, tol) ;
       t += eps.this_ ;
@@ -471,9 +474,6 @@ namespace Chroma
       }
     }
 
-
-
-
     QDPIO::cout << "END_ANALYZE_wflow" << endl ; 
 
     push(xml, "wilson_flow_results");
@@ -481,6 +481,10 @@ namespace Chroma
     write(xml,"wflow_gact4i",gact4i_vec) ; 
     write(xml,"wflow_gactij",gactij_vec) ; 
     pop(xml);  // elem
+
+    // returns the last full step size (should be eps_next_, but that one gets chopped);
+    // eps.this_ is close enough
+    return eps.prev_;
 
   }
 
