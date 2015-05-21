@@ -437,9 +437,9 @@ namespace Chroma
           step_vec_tmp[k] = step_vec[k];
         }
 
-        gact4i_vec.resize(counter+dim+1);
-        gactij_vec.resize(counter+dim+1);
-        step_vec.resize(counter+dim+1);
+        gact4i_vec.resize(counter+1+dim);
+        gactij_vec.resize(counter+1+dim);
+        step_vec.resize(counter+1+dim);
 
         for (int k=0; k<counter+1; ++k) {
           gact4i_vec[k] = gact4i_vec_tmp[k];
@@ -447,16 +447,16 @@ namespace Chroma
           step_vec[k] = step_vec_tmp[k];
         }
 
-        gact4i_vec_tmp.resize(counter+dim+1);
-        gactij_vec_tmp.resize(counter+dim+1);
-        step_vec_tmp.resize(counter+dim+1);
+        gact4i_vec_tmp.resize(counter+1+dim);
+        gactij_vec_tmp.resize(counter+1+dim);
+        step_vec_tmp.resize(counter+1+dim);
 
       }
       counter++;
     }
     {
       // This nonsense is needed since resize() kills the data within the multi1d
-      for (int k=0; k<counter+1; ++k) {
+      for (int k=0; k<counter; ++k) {
         gact4i_vec_tmp[k] = gact4i_vec[k];
         gactij_vec_tmp[k] = gactij_vec[k];
         step_vec_tmp[k] = step_vec[k];
@@ -464,7 +464,7 @@ namespace Chroma
       gact4i_vec.resize(counter);
       gactij_vec.resize(counter);
       step_vec.resize(counter);
-      for (int k=0; k<counter+1; ++k) {
+      for (int k=0; k<counter; ++k) {
         gact4i_vec[k] = gact4i_vec_tmp[k];
         gactij_vec[k] = gactij_vec_tmp[k];
         step_vec[k] = step_vec_tmp[k];
