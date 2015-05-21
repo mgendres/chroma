@@ -29,12 +29,13 @@ namespace Chroma
    * \param xml    wilson flow (Write)
    * \param u      gauge field      (Read)
    * \param wtime  wtime (Read)
+   * \param eps    starting eps (Read)
    * \param tol    tolerance (Read)
    * \param time direction (Read)
    */
 
-  void wilson_flow(XMLWriter& xml,
-		   multi1d<LatticeColorMatrix> & u, Real wtime,  Real tol, 
+  Real wilson_flow(XMLWriter& xml,
+		   multi1d<LatticeColorMatrix> & u, Real wtime, Real eps, Real tol, 
 		   int jomit)  ;
 
 }  // end namespace Chroma

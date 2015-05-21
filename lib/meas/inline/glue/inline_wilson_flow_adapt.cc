@@ -25,6 +25,8 @@ namespace Chroma
     {
       XMLReader inputtop(xml, path);
 
+      read(inputtop, "eps_in", input.eps_in);
+      read(inputtop, "eps_out", input.eps_out);
       read(inputtop, "gauge_in", input.gauge_in);
       read(inputtop, "gauge_out", input.gauge_out);
     }
@@ -34,6 +36,8 @@ namespace Chroma
     {
       push(xml, path);
 
+      write(xml, "eps_in", input.eps_in);
+      write(xml, "eps_out", input.eps_out);
       write(xml, "gauge_in", input.gauge_in);
       write(xml, "gauge_out", input.gauge_out);
 
@@ -203,6 +207,27 @@ namespace Chroma
       // Write out the input
       write(xml_out, "Input", params);
 
+      // Test and grab a reference to the step size if requested 
+      Real eps(0.001) ;  // Default eps
+      if ( params.named_obj.eps_in != "default_eps" ) {
+        try
+          {
+            eps = TheNamedObjMap::Instance().getData< Real >(params.named_obj.eps_in);
+          }
+        catch( std::bad_cast ) 
+          {
+            QDPIO::cerr << name << ": caught dynamic cast error" << endl;
+            QDP_abort(1);
+          }
+        catch (const string& e) 
+          {
+            QDPIO::cerr << name << ": map call failed: " << e << endl;
+            QDP_abort(1);
+          }
+      }
+      QDPIO::cout << "Using an initial flow step size of = " << eps << endl;
+
+
       // Test and grab a reference to the gauge field
       // -- we really need only two gauge fields --
       multi1d<LatticeColorMatrix> u ; 
@@ -236,8 +261,8 @@ namespace Chroma
       
       
       multi1d<LatticeColorMatrix> wf_u = u ; 
-      wilson_flow(xml_out, wf_u, params.param.wtime, params.param.tol, params.param.t_dir) ;
-
+      eps = wilson_flow(xml_out, wf_u, params.param.wtime, eps, params.param.tol, params.param.t_dir) ;
+      
 
       // Calculate some gauge invariant observables just for info.
       MesPlq(xml_out, "WislonFlowAdaptGaugeObservables", wf_u);
@@ -253,6 +278,9 @@ namespace Chroma
 	record_xml << gauge_xml;
 
 	// Store the gauge field
+	TheNamedObjMap::Instance().create< Real >(params.named_obj.eps_out);
+	TheNamedObjMap::Instance().getData< Real >(params.named_obj.eps_out) = eps;
+
 	TheNamedObjMap::Instance().create< multi1d<LatticeColorMatrix> >(params.named_obj.gauge_out);
 	TheNamedObjMap::Instance().getData< multi1d<LatticeColorMatrix> >(params.named_obj.gauge_out) = wf_u;
 	TheNamedObjMap::Instance().get(params.named_obj.gauge_out).setFileXML(file_xml);
