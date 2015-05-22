@@ -374,8 +374,15 @@ namespace Chroma
       }
   
       rho.next_ = rho.next_ * 0.95*pow(toDouble(tol/max_dist), 1./3.);
-      if ( toDouble(rho.next_) > toDouble(rho.max_) ) { rho.next_ = rho.max_; }
-      if ( toDouble(rho.next_) > toDouble(rho.cut_-rho.this_) ) { rho.next_ = rho.cut_ - rho.this_; }
+
+      if (!go) {
+        // rho.next_ can only be increase if go==false
+        // we must therefore ensure it does not exceed certain bounds
+        // when this occurs; note that rho.this_ is not defined properly until
+        // after go==false, which is why this must be enclosed by the if statement
+        if ( toDouble(rho.next_) > toDouble(rho.max_) ) { rho.next_ = rho.max_; }
+        if ( toDouble(rho.next_) > toDouble(rho.cut_-rho.this_) ) { rho.next_ = rho.cut_ - rho.this_; }
+      }
 
     }
 
@@ -413,10 +420,17 @@ namespace Chroma
     eps.next_ = eps_init;
     eps.max_ = 0.2;
     eps.cut_ = wtime; 
+
     Real t(0.0);
     int counter(1);
+
     QDPIO::cout << "WFLOW " << 0.0 << " " << gact4i << " " << gactij <<  endl ; 
-    while (toFloat(wtime-t) > 1e-7)
+    QDPIO::cout << "eps.prev_ : " << eps.prev_ << " ";
+    QDPIO::cout << "eps.this_ : " << eps.this_ << " ";
+    QDPIO::cout << "eps.next_ : " << eps.next_ << " ";
+    QDPIO::cout << "eps.cut_ : " << eps.cut_ << endl;
+
+    while ( toDouble(eps.cut_) > 1e-7)
     {
       wilson_flow_one_step_adapt(u, eps, tol) ;
       t += eps.this_ ;
@@ -427,38 +441,41 @@ namespace Chroma
       gactij_vec[counter] = gactij ;
 
       QDPIO::cout << "WFLOW " << t << " " << gact4i << " " << gactij <<  endl ; 
+      QDPIO::cout << "eps.prev_ : " << eps.prev_ << " ";
+      QDPIO::cout << "eps.this_ : " << eps.this_ << " ";
+      QDPIO::cout << "eps.next_ : " << eps.next_ << " ";
+      QDPIO::cout << "eps.cut_ : " << eps.cut_ << endl;
 
       step_vec[counter] = t ;
 
-      // If we hit the end of the multid, the resize it
+      // If we hit the end of the multid, then we need to resize it
       if ( (counter+1)%dim==0) {
-        // This nonsense is needed since resize() kills the data within the multi1d
 
-        for (int k=0; k<counter+1; ++k) {
-          gact4i_vec_tmp[k] = gact4i_vec[k];
-          gactij_vec_tmp[k] = gactij_vec[k];
-          step_vec_tmp[k] = step_vec[k];
+        {
+          // All of this nonsense is needed since resize() kills the data within the multi1d
+          for (int k=0; k<counter+1; ++k) {
+            gact4i_vec_tmp[k] = gact4i_vec[k];
+            gactij_vec_tmp[k] = gactij_vec[k];
+            step_vec_tmp[k] = step_vec[k];
+          }
+          gact4i_vec.resize(counter+1+dim);
+          gactij_vec.resize(counter+1+dim);
+          step_vec.resize(counter+1+dim);
+          for (int k=0; k<counter+1; ++k) {
+            gact4i_vec[k] = gact4i_vec_tmp[k];
+            gactij_vec[k] = gactij_vec_tmp[k];
+            step_vec[k] = step_vec_tmp[k];
+          }
+          gact4i_vec_tmp.resize(counter+1+dim);
+          gactij_vec_tmp.resize(counter+1+dim);
+          step_vec_tmp.resize(counter+1+dim);
         }
-
-        gact4i_vec.resize(counter+1+dim);
-        gactij_vec.resize(counter+1+dim);
-        step_vec.resize(counter+1+dim);
-
-        for (int k=0; k<counter+1; ++k) {
-          gact4i_vec[k] = gact4i_vec_tmp[k];
-          gactij_vec[k] = gactij_vec_tmp[k];
-          step_vec[k] = step_vec_tmp[k];
-        }
-
-        gact4i_vec_tmp.resize(counter+1+dim);
-        gactij_vec_tmp.resize(counter+1+dim);
-        step_vec_tmp.resize(counter+1+dim);
 
       }
       counter++;
     }
     {
-      // This nonsense is needed since resize() kills the data within the multi1d
+      // All of this nonsense is needed since resize() kills the data within the multi1d
       for (int k=0; k<counter; ++k) {
         gact4i_vec_tmp[k] = gact4i_vec[k];
         gactij_vec_tmp[k] = gactij_vec[k];
