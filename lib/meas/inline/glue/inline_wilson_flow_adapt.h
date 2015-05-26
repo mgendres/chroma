@@ -34,6 +34,7 @@ namespace Chroma
 	int version ;
 	Real tol;
 	Real wtime ;
+	Real max_eps ;
 	int t_dir; // the time direction of measurements 
       } param;
 

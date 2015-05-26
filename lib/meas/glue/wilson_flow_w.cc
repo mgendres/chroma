@@ -394,7 +394,7 @@ namespace Chroma
 
   Real wilson_flow(XMLWriter& xml,
 		   multi1d<LatticeColorMatrix> & u, Real wtime, Real eps_init, Real tol, 
-		   int jomit)
+		   Real max_eps, int jomit)
   {
     Real gact4i, gactij;
     int dim = 10000 ;
@@ -418,7 +418,7 @@ namespace Chroma
     eps.prev_ = 0.0;
     eps.this_ = 0.0;
     eps.next_ = eps_init;
-    eps.max_ = 0.2;
+    eps.max_ = max_eps;
     eps.cut_ = wtime; 
 
     Real t(0.0);

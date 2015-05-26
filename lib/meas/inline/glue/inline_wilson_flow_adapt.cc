@@ -53,6 +53,7 @@ namespace Chroma
       read(inputtop, "version", input.version);
       read(inputtop, "tol", input.tol);
       read(inputtop, "wtime", input.wtime);
+      read(inputtop, "max_eps", input.max_eps);
       read(inputtop, "t_dir",input.t_dir);
 
     }
@@ -65,6 +66,7 @@ namespace Chroma
       write(xml, "version", input.version);
       write(xml, "tol", input.tol);
       write(xml, "wtime", input.wtime);
+      write(xml, "max_eps", input.max_eps);
       write(xml, "t_dir",input.t_dir);
 
       pop(xml);
@@ -261,7 +263,7 @@ namespace Chroma
       
       
       multi1d<LatticeColorMatrix> wf_u = u ; 
-      eps = wilson_flow(xml_out, wf_u, params.param.wtime, eps, params.param.tol, params.param.t_dir) ;
+      eps = wilson_flow(xml_out, wf_u, params.param.wtime, eps, params.param.tol, params.param.max_eps, params.param.t_dir) ;
       
 
       // Calculate some gauge invariant observables just for info.

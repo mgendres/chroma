@@ -31,12 +31,13 @@ namespace Chroma
    * \param wtime  wtime (Read)
    * \param eps    starting eps (Read)
    * \param tol    tolerance (Read)
+   * \param max_eps   maximum step size allowed (Read)
    * \param time direction (Read)
    */
 
   Real wilson_flow(XMLWriter& xml,
 		   multi1d<LatticeColorMatrix> & u, Real wtime, Real eps, Real tol, 
-		   int jomit)  ;
+		   Real max_eps, int jomit)  ;
 
 }  // end namespace Chroma
 
