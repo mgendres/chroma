@@ -8,6 +8,7 @@
 #include "update/heatbath/mciter.h"
 #include "update/heatbath/su3over.h"
 #include "update/heatbath/su2_hb_update.h"
+#include "meas/glue/interpolate.h" // required for link mask
 
 namespace Chroma 
 {
@@ -40,6 +41,10 @@ namespace Chroma
 
     const Set& gauge_set = S_g.getSet();
     const int num_subsets = gauge_set.numSubsets();
+
+    multi1d<LatticeBoolean> linkB(Nd); // true for 2^d cell edges
+    if (hbp.retherm) GetLinkMask(linkB, 0); // compute the mask
+    multi1d<LatticeColorMatrix> u0 = u; 
 
     for(int iter = 0; iter <= hbp.nOver; ++iter)
     {
@@ -92,6 +97,9 @@ namespace Chroma
 	  // If using Schroedinger functional, reset the boundaries
 	  // NOTE: this routine resets all links and not just those under mu,cb
 	  S_g.getGaugeBC().modify(u);
+
+          // Final step of all: undo everything you just did for 2^d cell boundary links
+          if (hbp.retherm) { u[mu] = where(linkB[mu], u0[mu], u[mu]); }
 
 	}    // closes mu loop
       }      // closes cb loop

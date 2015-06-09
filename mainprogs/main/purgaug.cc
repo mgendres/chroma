@@ -56,6 +56,16 @@ namespace Chroma
       QDPIO::cerr << "Caught Exception reading HBParams: " << e << endl;
       QDP_abort(1);
     }
+
+    try { 
+      XMLReader paramtop(xml, path);
+      read(paramtop, "retherm", p.retherm);
+    }
+    catch(const std::string& e ) { 
+      QDPIO::cerr << "Setting HBParams::retherm to false. " << endl;
+      p.retherm=false;
+    }
+
   }
 
   //! Writer
@@ -65,6 +75,7 @@ namespace Chroma
 
     write(xml, "NmaxHB", p.NmaxHB);
     write(xml, "nOver", p.nOver);
+    write(xml, "retherm", p.retherm);
 
     pop(xml);
   }

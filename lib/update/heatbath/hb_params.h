@@ -20,6 +20,7 @@ namespace Chroma
     Double xi() const { return xi_0; }
     Double xi2() const { return xi_0*xi_0; }
     bool aniso() const {return anisoP; }
+    bool Retherm() const { return retherm; }
 
     /**************************************************
      * number of maximum HB tries for Creutz or KP a_0, 
@@ -34,6 +35,11 @@ namespace Chroma
     int  t_dir;
     int  nOver;
     bool anisoP;
+
+    // Rethermalization flag; when true, links on the edges of 2^4 hypercubes
+    // are not updated
+    bool retherm;
+
   };
 
   
