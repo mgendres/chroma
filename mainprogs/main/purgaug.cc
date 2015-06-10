@@ -47,23 +47,20 @@ namespace Chroma
   //! Reader
   void read(XMLReader& xml, const std::string& path, HBParams& p)
   {
+
     try { 
       XMLReader paramtop(xml, path);
       read(paramtop, "NmaxHB", p.NmaxHB);
       read(paramtop, "nOver", p.nOver);
+      if (paramtop.count("retherm") == 1) {
+        read(paramtop, "retherm", p.retherm);
+      } else {
+        p.retherm = false;
+      }
     }
     catch(const std::string& e ) { 
       QDPIO::cerr << "Caught Exception reading HBParams: " << e << endl;
       QDP_abort(1);
-    }
-
-    try { 
-      XMLReader paramtop(xml, path);
-      read(paramtop, "retherm", p.retherm);
-    }
-    catch(const std::string& e ) { 
-      QDPIO::cerr << "Setting HBParams::retherm to false. " << endl;
-      p.retherm=false;
     }
 
   }
