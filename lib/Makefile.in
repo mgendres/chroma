@@ -837,6 +837,7 @@ am__libchroma_a_SOURCES_DIST = actions/boson/operator/klein_gord.cc \
 	meas/inline/glue/inline_glue_aggregate.cc \
 	meas/inline/glue/inline_apply_gaugestate.cc \
 	meas/inline/glue/inline_plaquette.cc \
+	meas/inline/glue/inline_coarse_plaquette.cc \
 	meas/inline/glue/inline_polylp.cc \
 	meas/inline/glue/inline_wilslp.cc \
 	meas/inline/glue/inline_fuzwilp.cc \
@@ -1635,6 +1636,7 @@ am_libchroma_a_OBJECTS = actions/boson/operator/klein_gord.$(OBJEXT) \
 	meas/inline/glue/inline_glue_aggregate.$(OBJEXT) \
 	meas/inline/glue/inline_apply_gaugestate.$(OBJEXT) \
 	meas/inline/glue/inline_plaquette.$(OBJEXT) \
+	meas/inline/glue/inline_coarse_plaquette.$(OBJEXT) \
 	meas/inline/glue/inline_polylp.$(OBJEXT) \
 	meas/inline/glue/inline_wilslp.$(OBJEXT) \
 	meas/inline/glue/inline_fuzwilp.$(OBJEXT) \
@@ -2520,6 +2522,7 @@ am__nobase_include_HEADERS_DIST = chroma_config.h chroma.h \
 	meas/inline/glue/inline_glue_aggregate.h \
 	meas/inline/glue/inline_apply_gaugestate.h \
 	meas/inline/glue/inline_plaquette.h \
+	meas/inline/glue/inline_coarse_plaquette.h \
 	meas/inline/glue/inline_polylp.h \
 	meas/inline/glue/inline_wilslp.h \
 	meas/inline/glue/inline_fuzwilp.h \
@@ -3569,6 +3572,7 @@ nobase_include_HEADERS = chroma_config.h chroma.h chromabase.h \
 	meas/inline/glue/inline_glue_aggregate.h \
 	meas/inline/glue/inline_apply_gaugestate.h \
 	meas/inline/glue/inline_plaquette.h \
+	meas/inline/glue/inline_coarse_plaquette.h \
 	meas/inline/glue/inline_polylp.h \
 	meas/inline/glue/inline_wilslp.h \
 	meas/inline/glue/inline_fuzwilp.h \
@@ -4264,6 +4268,7 @@ libchroma_a_SOURCES = actions/boson/operator/klein_gord.cc \
 	meas/inline/glue/inline_glue_aggregate.cc \
 	meas/inline/glue/inline_apply_gaugestate.cc \
 	meas/inline/glue/inline_plaquette.cc \
+	meas/inline/glue/inline_coarse_plaquette.cc \
 	meas/inline/glue/inline_polylp.cc \
 	meas/inline/glue/inline_wilslp.cc \
 	meas/inline/glue/inline_fuzwilp.cc \
@@ -6414,6 +6419,9 @@ meas/inline/glue/inline_apply_gaugestate.$(OBJEXT):  \
 meas/inline/glue/inline_plaquette.$(OBJEXT):  \
 	meas/inline/glue/$(am__dirstamp) \
 	meas/inline/glue/$(DEPDIR)/$(am__dirstamp)
+meas/inline/glue/inline_coarse_plaquette.$(OBJEXT):  \
+	meas/inline/glue/$(am__dirstamp) \
+	meas/inline/glue/$(DEPDIR)/$(am__dirstamp)
 meas/inline/glue/inline_polylp.$(OBJEXT):  \
 	meas/inline/glue/$(am__dirstamp) \
 	meas/inline/glue/$(DEPDIR)/$(am__dirstamp)
@@ -7557,6 +7565,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/gfix/$(DEPDIR)/inline_gfix_aggregate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_admiss.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_apply_gaugestate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_coarse_plaquette.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_coarsen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_fuzwilp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@meas/inline/glue/$(DEPDIR)/inline_glue_aggregate.Po@am__quote@

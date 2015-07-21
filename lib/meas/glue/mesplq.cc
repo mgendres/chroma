@@ -81,6 +81,76 @@ namespace Chroma
     END_CODE();
   }
 
+
+  // MGE
+  template<typename Q>
+  void MesPlq_t(const multi1d<Q>& u, 
+	      multi1d< multi2d<Double> >& plane_plaq, multi1d<Double>& link)
+  {
+    START_CODE();
+
+    plane_plaq.resize(Nd+1);
+    link.resize(Nd+1);
+
+    // This holds integer values used to identify sites
+    LatticeInt site;
+    site = zero;
+    for(int sig=0; sig<Nd; ++sig) {
+      site  += (Layout::latticeCoordinate(sig)%2);
+    }
+
+    for (int sublat=0; sublat<Nd+1; ++sublat) {    
+      plane_plaq[sublat].resize(Nd,Nd);
+      link[sublat] = zero;
+    }
+
+    LatticeDouble tmp;
+    // Compute the average plaquettes
+    for(int mu=1; mu < Nd; ++mu)
+    {
+      for(int nu=0; nu < mu; ++nu)
+      {
+        // This is for the 1x1 plaquette
+        // tmp = real(trace(u[mu]*shift(u[nu],FORWARD,mu)*adj(shift(u[mu],FORWARD,nu))*adj(u[nu])));
+        // This is for the 2x2 plaquette
+        LatticeColorMatrix tmp1 = shift(u[nu],FORWARD,mu) ;
+        LatticeColorMatrix tmp2 = shift(tmp1,FORWARD,nu) ;
+        LatticeColorMatrix tmp3 = shift(u[mu],FORWARD,nu) ;
+        LatticeColorMatrix tmp4 = shift(tmp3 ,FORWARD,nu) ;
+        LatticeColorMatrix staple_0 = u[mu]*tmp1*tmp2*adj(tmp4) ;
+        LatticeColorMatrix staple_1 = u[mu]*shift(staple_0,FORWARD,mu)*adj(tmp4) ;
+        LatticeColorMatrix tmp5 = shift(u[nu],FORWARD,nu) ;
+        tmp = real(trace(staple_1 * adj(u[nu] * tmp5) )) ;
+        for (int sublat=0; sublat<Nd+1; ++sublat) {    
+          // project out p-cell contribution
+          plane_plaq[sublat][mu][nu] = sum(where(site==LatticeInt(sublat),tmp,LatticeDouble(zero)));
+        }
+      }
+    }
+
+    // Normalize the planes
+    for(int mu=1; mu < Nd; ++mu)
+      for(int nu=0; nu < mu; ++nu)
+        for (int sublat=0; sublat<Nd+1; ++sublat)
+        {
+          plane_plaq[sublat][mu][nu] /= Double(Layout::vol()*Nc);
+          plane_plaq[sublat][nu][mu] = plane_plaq[sublat][mu][nu];
+        }
+
+    // Compute the average link
+    for(int mu=0; mu < Nd; ++mu)
+    for (int sublat=0; sublat<Nd+1; ++sublat) {
+      tmp = real(trace( u[mu] ));
+      link[sublat] += sum( where(site==LatticeInt(sublat), tmp, LatticeDouble(zero)  ));
+    }
+
+    for (int sublat=0; sublat<Nd+1; ++sublat)
+      link[sublat] /= Double(Layout::vol()*Nd*Nc);
+
+    END_CODE();
+  }
+
+
   void MesPlq(const multi1d<LatticeColorMatrixF3>& u, 
 	      multi2d<Double>& plane_plaq, Double& link) 
   {
@@ -92,6 +162,21 @@ namespace Chroma
   {
       MesPlq_t(u,plane_plaq, link);
   }
+
+
+  void MesPlq(const multi1d<LatticeColorMatrixF3>& u, 
+	      multi1d< multi2d<Double> >& plane_plaq, multi1d<Double>& link) 
+  {
+      MesPlq_t(u,plane_plaq, link);
+  }
+
+  void MesPlq(const multi1d<LatticeColorMatrixD3>& u, 
+	      multi1d< multi2d<Double> >& plane_plaq, multi1d<Double>& link) 
+  {
+      MesPlq_t(u,plane_plaq, link);
+  }
+
+
 
   //! Return the value of the average plaquette normalized to 1
   /*!
@@ -144,6 +229,59 @@ namespace Chroma
     END_CODE();
   }
 
+  // MGE
+  template<typename Q>
+  void MesPlq_t(const multi1d<Q>& u, 
+	      multi1d<Double>& w_plaq, multi1d<Double>& s_plaq, multi1d<Double>& t_plaq, 
+	      multi1d< multi2d<Double> >& plane_plaq,
+	      multi1d<Double>& link)
+  {
+    START_CODE();
+
+    w_plaq.resize(Nd+1);
+    s_plaq.resize(Nd+1);
+    t_plaq.resize(Nd+1);
+    plane_plaq.resize(Nd+1);
+    for (int mu=0; mu<Nd+1; ++mu) { plane_plaq[mu].resize(Nd,Nd); }
+    link.resize(Nd+1);
+
+    // Compute plane plaquettes and link
+    MesPlq(u, plane_plaq, link);
+
+    // Compute basic plaquettes
+    w_plaq = s_plaq = t_plaq = zero;
+
+    for(int sublat=0; sublat<Nd+1; ++sublat)
+    {
+      for(int mu=1; mu < Nd; ++mu)
+      {
+        for(int nu=0; nu < mu; ++nu)
+        {
+          Double tmp = plane_plaq[sublat][mu][nu];
+     
+          w_plaq[sublat] += tmp;
+     
+          if (mu == tDir() || nu == tDir())
+            t_plaq[sublat] += tmp;
+          else 
+            s_plaq[sublat] += tmp;
+        }
+      }
+    
+      // Normalize
+      w_plaq[sublat] *= 2.0 / Double(Nd*(Nd-1));
+    
+      if (Nd > 2) 
+        s_plaq[sublat] *= 2.0 / Double((Nd-1)*(Nd-2));
+    
+      t_plaq[sublat] /= Double(Nd-1);
+
+    }
+ 
+    END_CODE();
+  }
+
+
   void MesPlq(const multi1d<LatticeColorMatrixF3>& u, 
 	      Double& w_plaq, Double& s_plaq, Double& t_plaq, 
 	      multi2d<Double>& plane_plaq,
@@ -159,6 +297,24 @@ namespace Chroma
   {
      MesPlq_t(u,w_plaq,s_plaq,t_plaq, plane_plaq, link);
   }
+
+  void MesPlq(const multi1d<LatticeColorMatrixF3>& u, 
+	      multi1d<Double>& w_plaq, multi1d<Double>& s_plaq, multi1d<Double>& t_plaq, 
+	      multi1d< multi2d<Double> >& plane_plaq,
+	      multi1d<Double>& link) 
+  {
+     MesPlq_t(u,w_plaq,s_plaq,t_plaq, plane_plaq, link);
+  }
+
+  void MesPlq(const multi1d<LatticeColorMatrixD3>& u, 
+	      multi1d<Double>& w_plaq, multi1d<Double>& s_plaq, multi1d<Double>& t_plaq, 
+	      multi1d< multi2d<Double> >& plane_plaq,
+	      multi1d<Double>& link)
+  {
+     MesPlq_t(u,w_plaq,s_plaq,t_plaq, plane_plaq, link);
+  }
+
+
 
   //! Return the value of the average plaquette normalized to 1
   /*!
@@ -194,6 +350,34 @@ namespace Chroma
 
     END_CODE();
   }
+
+  void MesPlq(const multi1d<LatticeColorMatrixF3>& u, 
+	      multi1d<Double>& w_plaq, multi1d<Double>& s_plaq, multi1d<Double>& t_plaq, multi1d<Double>& link)
+  {
+    START_CODE();
+
+    multi1d< multi2d<Double> > plane_plaq(Nd+1);
+
+
+    MesPlq(u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+
+    END_CODE();
+  }
+ 
+  void MesPlq(const multi1d<LatticeColorMatrixD3>& u, 
+	      multi1d<Double>& w_plaq, multi1d<Double>& s_plaq, multi1d<Double>& t_plaq, multi1d<Double>& link)
+  {
+    START_CODE();
+
+    multi1d< multi2d<Double> > plane_plaq(Nd+1);
+
+    MesPlq(u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
+
+    END_CODE();
+  }
+
+
+
 
   //! Print the value of the average plaquette normalized to 1
   /*!

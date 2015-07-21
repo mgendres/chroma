@@ -23,6 +23,13 @@ namespace Chroma
   void MesPlq(const multi1d<LatticeColorMatrixD3>& u, 
 	      Double& w_plaq, Double& s_plaq, Double& t_plaq, Double& link);
 
+  void MesPlq(const multi1d<LatticeColorMatrixF3>& u, 
+	      multi1d<Double>& w_plaq, multi1d<Double>& s_plaq, multi1d<Double>& t_plaq, multi1d<Double>& link);
+
+  void MesPlq(const multi1d<LatticeColorMatrixD3>& u, 
+	      multi1d<Double>& w_plaq, multi1d<Double>& s_plaq, multi1d<Double>& t_plaq, multi1d<Double>& link);
+
+
   //! Return the value of the average plaquette normalized to 1
   /*!
    * \ingroup glue
@@ -44,6 +51,17 @@ namespace Chroma
 	      Double& w_plaq, Double& s_plaq, Double& t_plaq, 
 	      multi2d<Double>& plane_plaq,
 	      Double& link);
+
+  void MesPlq(const multi1d<LatticeColorMatrixF3>& u, 
+	      multi1d<Double>& w_plaq, multi1d<Double>& s_plaq, multi1d<Double>& t_plaq, 
+	      multi1d< multi2d<Double> >& plane_plaq,
+	      multi1d<Double>& link);
+
+  void MesPlq(const multi1d<LatticeColorMatrixD3>& u, 
+	      multi1d<Double>& w_plaq, multi1d<Double>& s_plaq, multi1d<Double>& t_plaq, 
+	      multi1d< multi2d<Double> >& plane_plaq,
+	      multi1d<Double>& link);
+
 
   //! Print the value of the average plaquette normalized to 1
   /*!

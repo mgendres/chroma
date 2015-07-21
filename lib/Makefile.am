@@ -823,6 +823,7 @@ nobase_include_HEADERS += \
 	meas/inline/glue/inline_glue_aggregate.h \
 	meas/inline/glue/inline_apply_gaugestate.h \
 	meas/inline/glue/inline_plaquette.h \
+	meas/inline/glue/inline_coarse_plaquette.h \
 	meas/inline/glue/inline_polylp.h \
 	meas/inline/glue/inline_wilslp.h \
 	meas/inline/glue/inline_fuzwilp.h \
@@ -1663,6 +1664,7 @@ libchroma_a_SOURCES += \
 	meas/inline/glue/inline_glue_aggregate.cc \
 	meas/inline/glue/inline_apply_gaugestate.cc \
 	meas/inline/glue/inline_plaquette.cc \
+	meas/inline/glue/inline_coarse_plaquette.cc \
 	meas/inline/glue/inline_polylp.cc \
 	meas/inline/glue/inline_wilslp.cc \
 	meas/inline/glue/inline_fuzwilp.cc \

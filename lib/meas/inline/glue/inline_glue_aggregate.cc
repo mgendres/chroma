@@ -4,6 +4,7 @@
 
 #include "meas/inline/glue/inline_glue_aggregate.h"
 #include "meas/inline/glue/inline_plaquette.h"
+#include "meas/inline/glue/inline_coarse_plaquette.h"
 #include "meas/inline/glue/inline_polylp.h"
 #include "meas/inline/glue/inline_qactden.h"
 #include "meas/inline/glue/inline_qnaive.h"
@@ -55,6 +56,7 @@ namespace Chroma
 	success &= InlineCoarsenEnv::registerAll();
 	success &= InlineAdmissEnv::registerAll();
 	success &= InlineWilsonFlowAdaptEnv::registerAll();
+	success &= InlineCoarsePlaquetteEnv::registerAll();
 
 	registered = true;
       }
