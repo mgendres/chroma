@@ -225,29 +225,29 @@ namespace Chroma
       MesPlq(u, w_plaq, s_plaq, t_plaq, plane_plaq, link);
 
       for (int mu=0; mu<Nd+1; ++mu) {
-        write(xml_out, "w_plaq_"+std::to_string(mu), w_plaq[mu]);
-        write(xml_out, "s_plaq_"+std::to_string(mu), s_plaq[mu]);
-        write(xml_out, "t_plaq_"+std::to_string(mu), t_plaq[mu]);
+        write(xml_out, "w_plaq_"+std::to_string(mu*1LL), w_plaq[mu]);
+        write(xml_out, "s_plaq_"+std::to_string(mu*1LL), s_plaq[mu]);
+        write(xml_out, "t_plaq_"+std::to_string(mu*1LL), t_plaq[mu]);
   
         if (Nd >= 2)
         {
-          write(xml_out, "plane_01_plaq_"+std::to_string(mu), plane_plaq[mu][0][1]);
+          write(xml_out, "plane_01_plaq_"+std::to_string(mu*1LL), plane_plaq[mu][0][1]);
         }
   
         if (Nd >= 3)
         {
-          write(xml_out, "plane_02_plaq_"+std::to_string(mu), plane_plaq[mu][0][2]);
-          write(xml_out, "plane_12_plaq_"+std::to_string(mu), plane_plaq[mu][1][2]);
+          write(xml_out, "plane_02_plaq_"+std::to_string(mu*1LL), plane_plaq[mu][0][2]);
+          write(xml_out, "plane_12_plaq_"+std::to_string(mu*1LL), plane_plaq[mu][1][2]);
         }
   
         if (Nd >= 4)
         {
-          write(xml_out, "plane_03_plaq_"+std::to_string(mu), plane_plaq[mu][0][3]);
-          write(xml_out, "plane_13_plaq_"+std::to_string(mu), plane_plaq[mu][1][3]);
-          write(xml_out, "plane_23_plaq_"+std::to_string(mu), plane_plaq[mu][2][3]);
+          write(xml_out, "plane_03_plaq_"+std::to_string(mu*1LL), plane_plaq[mu][0][3]);
+          write(xml_out, "plane_13_plaq_"+std::to_string(mu*1LL), plane_plaq[mu][1][3]);
+          write(xml_out, "plane_23_plaq_"+std::to_string(mu*1LL), plane_plaq[mu][2][3]);
         }
   
-        write(xml_out, "link_"+std::to_string(mu), link[mu]);
+        write(xml_out, "link_"+std::to_string(mu*1LL), link[mu]);
       } 
     
       pop(xml_out); // pop("CoarsePlaquette");
