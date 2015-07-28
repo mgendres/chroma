@@ -117,7 +117,7 @@ HDRS =
 ##
 bin_PROGRAMS = chroma  \
         purgaug \
-        chroma_refine \
+        chroma_refine hmc2 \
         cfgtransf \
         const_hmc hmc spectrum_s
 
@@ -156,6 +156,7 @@ collect_propcomp_SOURCES = collect_propcomp.cc
 collect_multi_propcomp_SOURCES = collect_multi_propcomp.cc
 spectrum_s_SOURCES= spectrum_s.cc
 hmc_SOURCES= hmc.cc
+hmc2_SOURCES= hmc2.cc
 const_hmc_SOURCES= const_hmc.cc
 purgaug_SOURCES= purgaug.cc
 chroma_refine_SOURCES= chroma_refine.cc
