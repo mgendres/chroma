@@ -3,6 +3,11 @@
  *  \brief Main code for HMC with dynamical fermion generation
  */
 
+//
+// This version of hmc has config and xml file naming conventions that match the purgaug program (i.e., config numbers are labeled 1,2,3,4 regardless of the number ofupdates between saves, and they come after .xml and .lime).
+// This change is simply to avoid rewriting my run scripts, which were written for purgaug.
+//
+
 #include "chroma.h"
 #include <string>
 

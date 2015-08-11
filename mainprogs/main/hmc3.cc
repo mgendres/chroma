@@ -3,6 +3,11 @@
  *  \brief Main code for HMC with dynamical fermion generation
  */
 
+//
+// This version of hmc is identical to hmc2, however measurements are performed during warmups.
+// This change was made so that I can study the rethermalization of displaced wilson loops during the warmup.
+//
+
 #include "chroma.h"
 #include <string>
 
