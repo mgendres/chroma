@@ -137,8 +137,9 @@ host_triplet = @host@
 @BUILD_QMT_TRUE@am__append_30 = @QMT_LDFLAGS@
 @BUILD_QMT_TRUE@am__append_31 = @QMT_LIBS@
 bin_PROGRAMS = chroma$(EXEEXT) purgaug$(EXEEXT) chroma_refine$(EXEEXT) \
-	hmc2$(EXEEXT) hmc3$(EXEEXT) cfgtransf$(EXEEXT) \
-	const_hmc$(EXEEXT) hmc$(EXEEXT) spectrum_s$(EXEEXT)
+	chroma_coarsen$(EXEEXT) hmc2$(EXEEXT) hmc3$(EXEEXT) \
+	cfgtransf$(EXEEXT) const_hmc$(EXEEXT) hmc$(EXEEXT) \
+	spectrum_s$(EXEEXT)
 check_PROGRAMS = collect_propcomp$(EXEEXT) qpropgfix$(EXEEXT) \
 	qproptrev$(EXEEXT) qpropqio$(EXEEXT) qproptransf$(EXEEXT) \
 	wallformfac$(EXEEXT) make_meson_ops$(EXEEXT) \
@@ -189,6 +190,15 @@ chroma_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1)
+am_chroma_coarsen_OBJECTS = chroma_coarsen.$(OBJEXT)
+chroma_coarsen_OBJECTS = $(am_chroma_coarsen_OBJECTS)
+chroma_coarsen_LDADD = $(LDADD)
+chroma_coarsen_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 am_chroma_refine_OBJECTS = chroma_refine.$(OBJEXT)
 chroma_refine_OBJECTS = $(am_chroma_refine_OBJECTS)
 chroma_refine_LDADD = $(LDADD)
@@ -411,27 +421,27 @@ am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(baryon_ops_red_dil_SOURCES) $(cfgtransf_SOURCES) \
-	$(chroma_SOURCES) $(chroma_refine_SOURCES) \
-	$(collect_multi_propcomp_SOURCES) $(collect_propcomp_SOURCES) \
-	$(const_hmc_SOURCES) $(hmc_SOURCES) $(hmc2_SOURCES) \
-	$(hmc3_SOURCES) $(make_baryon_ops_SOURCES) \
-	$(make_meson_ops_SOURCES) multi_propagator.c \
-	$(multi_propagator_comp_SOURCES) $(propagator_comp_SOURCES) \
-	$(purgaug_SOURCES) $(qpropadd_SOURCES) $(qpropgfix_SOURCES) \
-	$(qpropqio_SOURCES) $(qproptransf_SOURCES) \
-	$(qproptrev_SOURCES) $(spectrum_s_SOURCES) \
-	$(wallformfac_SOURCES)
+	$(chroma_SOURCES) $(chroma_coarsen_SOURCES) \
+	$(chroma_refine_SOURCES) $(collect_multi_propcomp_SOURCES) \
+	$(collect_propcomp_SOURCES) $(const_hmc_SOURCES) \
+	$(hmc_SOURCES) $(hmc2_SOURCES) $(hmc3_SOURCES) \
+	$(make_baryon_ops_SOURCES) $(make_meson_ops_SOURCES) \
+	multi_propagator.c $(multi_propagator_comp_SOURCES) \
+	$(propagator_comp_SOURCES) $(purgaug_SOURCES) \
+	$(qpropadd_SOURCES) $(qpropgfix_SOURCES) $(qpropqio_SOURCES) \
+	$(qproptransf_SOURCES) $(qproptrev_SOURCES) \
+	$(spectrum_s_SOURCES) $(wallformfac_SOURCES)
 DIST_SOURCES = $(baryon_ops_red_dil_SOURCES) $(cfgtransf_SOURCES) \
-	$(chroma_SOURCES) $(chroma_refine_SOURCES) \
-	$(collect_multi_propcomp_SOURCES) $(collect_propcomp_SOURCES) \
-	$(const_hmc_SOURCES) $(hmc_SOURCES) $(hmc2_SOURCES) \
-	$(hmc3_SOURCES) $(make_baryon_ops_SOURCES) \
-	$(make_meson_ops_SOURCES) multi_propagator.c \
-	$(multi_propagator_comp_SOURCES) $(propagator_comp_SOURCES) \
-	$(purgaug_SOURCES) $(qpropadd_SOURCES) $(qpropgfix_SOURCES) \
-	$(qpropqio_SOURCES) $(qproptransf_SOURCES) \
-	$(qproptrev_SOURCES) $(spectrum_s_SOURCES) \
-	$(wallformfac_SOURCES)
+	$(chroma_SOURCES) $(chroma_coarsen_SOURCES) \
+	$(chroma_refine_SOURCES) $(collect_multi_propcomp_SOURCES) \
+	$(collect_propcomp_SOURCES) $(const_hmc_SOURCES) \
+	$(hmc_SOURCES) $(hmc2_SOURCES) $(hmc3_SOURCES) \
+	$(make_baryon_ops_SOURCES) $(make_meson_ops_SOURCES) \
+	multi_propagator.c $(multi_propagator_comp_SOURCES) \
+	$(propagator_comp_SOURCES) $(purgaug_SOURCES) \
+	$(qpropadd_SOURCES) $(qpropgfix_SOURCES) $(qpropqio_SOURCES) \
+	$(qproptransf_SOURCES) $(qproptrev_SOURCES) \
+	$(spectrum_s_SOURCES) $(wallformfac_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -668,6 +678,7 @@ hmc3_SOURCES = hmc3.cc
 const_hmc_SOURCES = const_hmc.cc
 purgaug_SOURCES = purgaug.cc
 chroma_refine_SOURCES = chroma_refine.cc
+chroma_coarsen_SOURCES = chroma_coarsen.cc
 wallformfac_SOURCES = wallformfac.cc
 qproptransf_SOURCES = qproptransf.cc
 qpropqio_SOURCES = qpropqio.cc
@@ -781,6 +792,10 @@ chroma$(EXEEXT): $(chroma_OBJECTS) $(chroma_DEPENDENCIES) $(EXTRA_chroma_DEPENDE
 	@rm -f chroma$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(chroma_OBJECTS) $(chroma_LDADD) $(LIBS)
 
+chroma_coarsen$(EXEEXT): $(chroma_coarsen_OBJECTS) $(chroma_coarsen_DEPENDENCIES) $(EXTRA_chroma_coarsen_DEPENDENCIES) 
+	@rm -f chroma_coarsen$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(chroma_coarsen_OBJECTS) $(chroma_coarsen_LDADD) $(LIBS)
+
 chroma_refine$(EXEEXT): $(chroma_refine_OBJECTS) $(chroma_refine_DEPENDENCIES) $(EXTRA_chroma_refine_DEPENDENCIES) 
 	@rm -f chroma_refine$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(chroma_refine_OBJECTS) $(chroma_refine_LDADD) $(LIBS)
@@ -870,6 +885,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/baryon_ops_red_dil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cfgtransf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chroma.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chroma_coarsen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chroma_refine.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/collect_multi_propcomp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/collect_propcomp.Po@am__quote@
